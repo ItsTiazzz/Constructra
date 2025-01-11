@@ -10,16 +10,17 @@ class WorkFlow {
 
     /*
         STYLE RULES:
-        FICSIT -> NEXATEK
-        AWESOME -> WICKED (Waste Inspection and Coordination for Kinetic Evaluation and Deployment)
-        Caterium -> Terbysium
+        NEXATEK -> Company.
+        WICKED (Waste Inspection and Coordination for Kinetic Evaluation and Deployment) -> Changing waste into currency.
+        Terbysium -> Special Alloy only found in the asteroid belt.
         SAM -?
         Somersloop -?
         Mercer -?
-        MAM -> DART (Directly Artificial Research Tree)
-        Xeno-Basher -> Boomstick
-        Xeno-Zapper -> CASU (Controlled Amplified Shock Unit)
-        ADA -> CIO
+        DART (Directly Artificial Research Tree) -> Research Tree.
+        CASU (Controlled Amplified Shock Unit) -> Shock based weapon.
+        Electronic Boomstick -> Stronger version of the CASU.
+        CIO (Computer Integrated Operator) -> AI Personal Assistant.
+        OperAXIS -> HUD Operating System name, to display information.
      */
 
     /*
