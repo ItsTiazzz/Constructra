@@ -25,7 +25,6 @@ class WorkFlow {
     /*
        TODO LIST
         - Finish the Resources stuff
-        - Set up GitHub
         - Think about whether I want to completely change the base game or actually keep some functionality.
           (Like disabling certain items, or bigger such as the health system)
      */
