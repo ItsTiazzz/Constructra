@@ -1,6 +1,7 @@
 {
   "values": [
     "constructra:biomass",
+    "constructra:liquid_biofuel",
     "constructra:solid_biofuel"
   ]
 }

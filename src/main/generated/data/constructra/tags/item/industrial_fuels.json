@@ -2,10 +2,9 @@
   "values": [
     "constructra:battery",
     "constructra:crude_oil",
-    "constructra:sonium_fuel_rod",
+    "constructra:nexonium_fuel_rod",
     "constructra:heavy_oil_residue",
     "constructra:ionized_fuel",
-    "constructra:liquid_biofuel",
     "constructra:packaged_fuel",
     "constructra:packaged_heavy_oil_residue",
     "constructra:packaged_ionized_fuel",
