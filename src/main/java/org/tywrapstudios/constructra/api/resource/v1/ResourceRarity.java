@@ -16,10 +16,10 @@ import static net.minecraft.util.Formatting.*;
 public enum ResourceRarity implements StringIdentifiable {
     NONE(0, "none", WHITE),
     STARTER(1, "starter", GRAY),
-    COMMON(2, "common", YELLOW),
-    UNCOMMON(3, "uncommon", AQUA),
-    RARE(4, "rare", LIGHT_PURPLE),
-    EPIC(5, "epic", GOLD);
+    COMMON(2, "common", DARK_GRAY),
+    UNCOMMON(3, "uncommon", YELLOW),
+    RARE(4, "rare", AQUA),
+    EPIC(5, "epic", LIGHT_PURPLE);
 
     public static final Codec<ResourceRarity> CODEC = StringIdentifiable.createBasicCodec(ResourceRarity::values);
 

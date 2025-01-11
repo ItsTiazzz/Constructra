@@ -25,9 +25,9 @@ class WorkFlow {
 
     /*
        TODO LIST
-        - Finish the Resources stuff
         - Think about whether I want to completely change the base game or actually keep some functionality.
           (Like disabling certain items, or bigger such as the health system)
+          - Getting rid of a lot of recipes might be a good idea.
      */
 
     // Items

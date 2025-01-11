@@ -1,5 +1,6 @@
 package org.tywrapstudios.constructra.api.resource.v1;
 
+import net.minecraft.block.Block;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -7,6 +8,7 @@ import net.minecraft.util.Identifier;
 interface Resource {
     Identifier getIdentifier();
     ItemConvertible getRetrievableItem();
+    Block getOriginBlock();
     ResourceRarity getRarity();
 
     default Text getName() {
