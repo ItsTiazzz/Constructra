@@ -19,7 +19,7 @@ import static org.tywrapstudios.constructra.Constructra.id;
 public abstract class EasyItemGroup {
     public String id;
     public String langEntry;
-    private final List<ItemConvertible> ENTRIES = new ArrayList<>();
+    protected final List<ItemConvertible> ENTRIES = new ArrayList<>();
     private ItemConvertible ICON;
 
     protected EasyItemGroup(String name, List<? extends ItemConvertible> items, ItemConvertible icon) {

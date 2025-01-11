@@ -21,6 +21,7 @@ public class Content {
         FuelItemRegistry.Group.INSTANCE.register();
         ALL_ITEM_CONVERTIBLE_CONTENT.addAll(ComponentItemRegistry.COMPONENT_ITEMS);
         ALL_ITEM_CONVERTIBLE_CONTENT.addAll(FuelItemRegistry.FUEL_ITEMS);
+        ALL_ITEM_CONVERTIBLE_CONTENT.addAll(FuelItemRegistry.BIO_FUEL_ITEMS);
         Constructra.LOGGER.debug("ItemConvertible List size: " + ALL_ITEM_CONVERTIBLE_CONTENT.size());
     }
 

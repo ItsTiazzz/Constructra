@@ -47,10 +47,10 @@ public class FuelItemRegistry {
         COAL = Items.COAL;
         COMPACTED_COAL = Items.COAL_BLOCK;
         CRUDE_OIL = create("crude_oil");
-        NEXONIUM_FUEL_ROD = create("sonium_fuel_rod");
+        NEXONIUM_FUEL_ROD = create("nexonium_fuel_rod");
         HEAVY_OIL_RESIDUE = create("heavy_oil_residue");
         IONIZED_FUEL = create("ionized_fuel");
-        LIQUID_BIOFUEL = create("liquid_biofuel");
+        LIQUID_BIOFUEL = createBio("liquid_biofuel");
         PACKAGED_FUEL = create("packaged_fuel");
         PACKAGED_HEAVY_OIL_RESIDUE = create("packaged_heavy_oil_residue");
         PACKAGED_IONIZED_FUEL = create("packaged_ionized_fuel");
@@ -93,6 +93,12 @@ public class FuelItemRegistry {
     public static class Group extends EasyItemGroup {
         Group() {
             super("fuels", FUEL_ITEMS, BIOMASS);
+        }
+
+        @Override
+        public void register() {
+            this.ENTRIES.addAll(BIO_FUEL_ITEMS);
+            super.register();
         }
 
         public static Group INSTANCE = new Group();

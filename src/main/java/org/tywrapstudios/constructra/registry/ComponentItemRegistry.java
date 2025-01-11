@@ -61,7 +61,6 @@ public class ComponentItemRegistry {
     public static final Item PACKAGED_WATER;
     public static final Item PACKAGED_PETROLEUM_COKE;
     public static final Item PLASTIC;
-    public static final Item FUEL_ROD;
     public static final Item PLUTONIUM_PELLET;
     public static final Item PLUTONIUM_WASTE;
     public static final Item POLYMER_RESIN;
@@ -134,9 +133,8 @@ public class ComponentItemRegistry {
         PACKAGED_NITROGEN_GAS = create("packaged_nitrogen_gas");
         PACKAGED_SULFURIC_ACID = create("packaged_sulfuric_acid");
         PACKAGED_WATER = create("packaged_water");
-        PACKAGED_PETROLEUM_COKE = create("packaged_petroleum_cook");
+        PACKAGED_PETROLEUM_COKE = create("packaged_petroleum_coke");
         PLASTIC = create("plastic");
-        FUEL_ROD = create("fuel_rod");
         PLUTONIUM_PELLET = create("plutonium_pellet");
         PLUTONIUM_WASTE  = create("plutonium_waste");
         POLYMER_RESIN = create("polymer_resin");
