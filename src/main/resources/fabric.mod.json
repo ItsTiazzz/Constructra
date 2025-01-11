@@ -1,0 +1,35 @@
+{
+	"schemaVersion": 1,
+	"id": "constructra",
+	"version": "${version}",
+	"name": "Constructra",
+	"description": "Build your dream factory, to save earth, save the day!",
+	"authors": [
+		"Tywrap Studios:",
+		"Tiazzz"
+	],
+	"contact": {
+	},
+	"license": "ARR",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"org.tywrapstudios.constructra.Constructra"
+		],
+		"fabric-datagen": [
+			"org.tywrapstudios.constructra.util.datagen.ConstructraDataGenerator"
+		]
+	},
+	"mixins": [
+		"constructra.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.16.9",
+		"minecraft": "~1.21.4",
+		"java": ">=21",
+		"fabric-api": "*",
+		"blossombridge": ">=1.1.1"
+	},
+	"suggests": {
+	}
+}

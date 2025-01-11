@@ -1,0 +1,19 @@
+package org.tywrapstudios.constructra.api.resource.v1;
+
+import net.minecraft.item.ItemConvertible;
+import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
+
+interface Resource {
+    Identifier getIdentifier();
+    ItemConvertible getRetrievableItem();
+    ResourceRarity getRarity();
+
+    default Text getName() {
+        return Text.translatable(getTranslationKey());
+    }
+
+    default String getTranslationKey() {
+        return "resource." + this.getIdentifier().getNamespace() + "." + this.getIdentifier().getPath();
+    }
+}

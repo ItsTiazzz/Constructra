@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "constructra:item/packaged_heavy_oil_residue"
+  }
+}

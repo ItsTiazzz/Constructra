@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "constructra:item/alclad_aluminium_sheet"
+  }
+}
