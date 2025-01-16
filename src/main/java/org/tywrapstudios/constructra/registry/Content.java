@@ -1,5 +1,7 @@
 package org.tywrapstudios.constructra.registry;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.registry.RegistryKey;
@@ -27,5 +29,9 @@ public class Content {
 
     protected static RegistryKey<Item> itemKey(String P) {
         return RegistryKey.of(RegistryKeys.ITEM, id(P));
+    }
+
+    protected static RegistryKey<Block> blockKey(String P) {
+        return RegistryKey.of(RegistryKeys.BLOCK, id(P));
     }
 }

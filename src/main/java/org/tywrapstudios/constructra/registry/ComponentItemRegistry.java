@@ -1,13 +1,21 @@
 package org.tywrapstudios.constructra.registry;
 
+import net.fabricmc.fabric.api.block.v1.FabricBlock;
+import net.minecraft.block.AbstractBlock;
+import net.minecraft.block.Block;
 import net.minecraft.item.*;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.util.Identifier;
 import org.tywrapstudios.constructra.api.item.v1.EasyItemGroup;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
+import static org.tywrapstudios.constructra.registry.Content.blockKey;
 import static org.tywrapstudios.constructra.registry.Content.itemKey;
 
 public class ComponentItemRegistry {
@@ -173,6 +181,24 @@ public class ComponentItemRegistry {
     }
 
     public static void register() {
+    }
+
+    public static class BBlock {
+        public static final List<Block> COMPONENT_BLOCKS = new ArrayList<>();
+
+        private static Block create(RegistryKey<Block> key, Function<AbstractBlock.Settings, Block> factory, AbstractBlock.Settings settings) {
+            Block block = factory.apply(settings.registryKey(key));
+            COMPONENT_BLOCKS.add(block);
+            return Registry.register(Registries.BLOCK, key, block);
+        }
+
+        private static Block create(String id, Function<AbstractBlock.Settings, Block> factory, AbstractBlock.Settings settings) {
+            return create(blockKey(id), factory, settings);
+        }
+
+        private static Block create(String id) {
+            return create(id, Block::new, AbstractBlock.Settings.create());
+        }
     }
 
     public static class Group extends EasyItemGroup {

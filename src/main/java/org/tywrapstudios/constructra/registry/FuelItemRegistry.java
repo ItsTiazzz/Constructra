@@ -19,7 +19,6 @@ public class FuelItemRegistry {
     public static final Item COAL;
     public static final Item COMPACTED_COAL;
     public static final Item CRUDE_OIL;
-    public static final Item NEXONIUM_FUEL_ROD;
     public static final Item HEAVY_OIL_RESIDUE;
     public static final Item IONIZED_FUEL;
     // LEAVES (tag)
@@ -47,7 +46,6 @@ public class FuelItemRegistry {
         COAL = Items.COAL;
         COMPACTED_COAL = Items.COAL_BLOCK;
         CRUDE_OIL = create("crude_oil");
-        NEXONIUM_FUEL_ROD = create("nexonium_fuel_rod");
         HEAVY_OIL_RESIDUE = create("heavy_oil_residue");
         IONIZED_FUEL = create("ionized_fuel");
         LIQUID_BIOFUEL = createBio("liquid_biofuel");
