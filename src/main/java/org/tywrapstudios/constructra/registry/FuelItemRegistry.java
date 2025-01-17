@@ -90,7 +90,7 @@ public class FuelItemRegistry {
 
     public static class Group extends EasyItemGroup {
         Group() {
-            super("fuels", FUEL_ITEMS, BIOMASS);
+            super("fuels", BIOMASS, FUEL_ITEMS);
         }
 
         @Override

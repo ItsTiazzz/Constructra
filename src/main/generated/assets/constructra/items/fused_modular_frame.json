@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "constructra:item/fused_modular_frame"
+    "model": "constructra:block/fused_modular_frame"
   }
 }

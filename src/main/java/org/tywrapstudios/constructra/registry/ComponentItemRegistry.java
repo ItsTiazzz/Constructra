@@ -8,6 +8,7 @@ import net.minecraft.registry.Registry;
 import org.tywrapstudios.constructra.api.item.v1.EasyItemGroup;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import static org.tywrapstudios.constructra.registry.Content.blockKey;
@@ -39,7 +40,6 @@ public class ComponentItemRegistry {
     public static final Item FABRIC;
     public static final Item FUEL;
     public static final Item HEAT_SINK;
-    public static final Item HEAVY_MODULAR_FRAME;
     public static final Item HIGH_SPEED_CONNECTOR;
     public static final Item IRON_INGOT;
     public static final Item IRON_PLATE;
@@ -102,7 +102,6 @@ public class ComponentItemRegistry {
         FABRIC = create("fabric");
         FUEL = create("fuel");
         HEAT_SINK = create("heat_sink");
-        HEAVY_MODULAR_FRAME = create("heavy_modular_frame");
         HIGH_SPEED_CONNECTOR = create("high_speed_connector");
         IRON_INGOT = Items.IRON_INGOT;
         IRON_PLATE = create("iron_plate");
@@ -189,35 +188,41 @@ public class ComponentItemRegistry {
         }
 
         private static Block create(String id, Block block) {
-            BlockItem item = new BlockItem(block, new Item.Settings()
-                    .registryKey(itemKey(id)));
+            BlockItem blockItem = new BlockItem(block, new Item.Settings()
+                    .registryKey(itemKey(id))
+                    .useBlockPrefixedTranslationKey());
+            Registry.register(Registries.ITEM, itemKey(id), blockItem);
             COMPONENT_BLOCKS.add(block);
-            Registry.register(Registries.ITEM, itemKey(id), item);
+
             return Registry.register(Registries.BLOCK, blockKey(id), block);
         }
 
         private static Block create(String id) {
-            return create(id, new Block(AbstractBlock.Settings.create()));
+            Block block = new Block(AbstractBlock.Settings.create()
+                    .registryKey(blockKey(id)));
+            return create(id, block);
         }
 
         private static Block createNonCube(String id, Block block) {
-            BlockItem item = new BlockItem(block, new Item.Settings()
+            BlockItem blockItem = new BlockItem(block, new Item.Settings()
                     .registryKey(itemKey(id))
                     .useBlockPrefixedTranslationKey());
+            Registry.register(Registries.ITEM, itemKey(id), blockItem);
             COMPONENT_BLOCKS_NON_CUBE.add(block);
-            Registry.register(Registries.ITEM, itemKey(id), item);
+
             return Registry.register(Registries.BLOCK, blockKey(id), block);
         }
 
         private static Block createNonCube(String id) {
-            return createNonCube(id, new Block(AbstractBlock.Settings.create()
-                    .registryKey(blockKey(id))));
+            Block block = new Block(AbstractBlock.Settings.create()
+                    .registryKey(blockKey(id)));
+            return createNonCube(id, block);
         }
     }
 
     public static class Group extends EasyItemGroup {
         private Group() {
-            super("components", COMPONENT_ITEMS, FABRIC);
+            super("components", FABRIC, COMPONENT_ITEMS, BBlock.COMPONENT_BLOCKS, BBlock.COMPONENT_BLOCKS_NON_CUBE);
         }
 
         public static final Group INSTANCE = new Group();

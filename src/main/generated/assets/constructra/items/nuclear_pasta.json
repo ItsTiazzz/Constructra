@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "constructra:item/nuclear_pasta"
+    "model": "constructra:block/nuclear_pasta"
   }
 }

@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "constructra:item/adaptive_control_unit"
+    "model": "constructra:block/adaptive_control_unit"
   }
 }

@@ -9,6 +9,7 @@ import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.text.Text;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,9 +23,12 @@ public abstract class EasyItemGroup {
     protected final List<ItemConvertible> ENTRIES = new ArrayList<>();
     private ItemConvertible ICON;
 
-    protected EasyItemGroup(String name, List<? extends ItemConvertible> items, ItemConvertible icon) {
+    @SafeVarargs
+    protected EasyItemGroup(String name, ItemConvertible icon, @NotNull List<? extends ItemConvertible>... items) {
         id = name;
-        ENTRIES.addAll(items);
+        for (List<? extends ItemConvertible> item : items) {
+            ENTRIES.addAll(item);
+        }
         langEntry = "itemGroup.constructra." + id;
         ICON = icon;
     }

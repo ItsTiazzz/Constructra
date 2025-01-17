@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "constructra:item/assembly_director_system"
+    "model": "constructra:block/assembly_director_system"
   }
 }

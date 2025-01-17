@@ -9,6 +9,8 @@ import net.minecraft.registry.RegistryKeys;
 import org.tywrapstudios.constructra.Constructra;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 import static org.tywrapstudios.constructra.Constructra.id;
@@ -22,6 +24,8 @@ public class Content {
         FuelItemRegistry.register();
         FuelItemRegistry.Group.INSTANCE.register();
         ALL_ITEM_CONVERTIBLE_CONTENT.addAll(ComponentItemRegistry.COMPONENT_ITEMS);
+        ALL_ITEM_CONVERTIBLE_CONTENT.addAll(ComponentItemRegistry.BBlock.COMPONENT_BLOCKS);
+        ALL_ITEM_CONVERTIBLE_CONTENT.addAll(ComponentItemRegistry.BBlock.COMPONENT_BLOCKS_NON_CUBE);
         ALL_ITEM_CONVERTIBLE_CONTENT.addAll(FuelItemRegistry.FUEL_ITEMS);
         ALL_ITEM_CONVERTIBLE_CONTENT.addAll(FuelItemRegistry.BIO_FUEL_ITEMS);
         Constructra.LOGGER.debug("ItemConvertible List size: " + ALL_ITEM_CONVERTIBLE_CONTENT.size());
