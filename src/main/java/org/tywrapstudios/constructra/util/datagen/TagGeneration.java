@@ -2,6 +2,7 @@ package org.tywrapstudios.constructra.util.datagen;
 
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
+import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.registry.RegistryWrapper;
 import org.tywrapstudios.constructra.Constructra;
@@ -23,6 +24,16 @@ public class TagGeneration {
                 getOrCreateTagBuilder(Tags.IItems.CRAFTING_COMPONENTS.get())
                         .add(item);
                 Constructra.LOGGER.debug("You're it! Component Item: " + item);
+            }
+            for (Block block : ComponentItemRegistry.BBlock.COMPONENT_BLOCKS) {
+                getOrCreateTagBuilder(Tags.IItems.CRAFTING_COMPONENTS.get())
+                        .add(block.asItem());
+                Constructra.LOGGER.debug("You're it! Component BlockItem: " + block);
+            }
+            for (Block block : ComponentItemRegistry.BBlock.COMPONENT_BLOCKS_NON_CUBE) {
+                getOrCreateTagBuilder(Tags.IItems.CRAFTING_COMPONENTS.get())
+                        .add(block.asItem());
+                Constructra.LOGGER.debug("You're it! Component BlockItem: " + block);
             }
             for (Item item : FuelItemRegistry.BIO_FUEL_ITEMS) {
                 getOrCreateTagBuilder(Tags.IItems.BIOLOGICAL_FUELS.get())

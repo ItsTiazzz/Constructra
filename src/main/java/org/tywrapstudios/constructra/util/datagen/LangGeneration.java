@@ -2,6 +2,7 @@ package org.tywrapstudios.constructra.util.datagen;
 
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
+import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.registry.RegistryWrapper;
@@ -20,8 +21,8 @@ public class LangGeneration extends FabricLanguageProvider {
     @Override
     public void generateTranslations(RegistryWrapper.WrapperLookup wrapperLookup, TranslationBuilder translationBuilder) {
         for (ItemConvertible item : Content.ALL_ITEM_CONVERTIBLE_CONTENT) {
-            if (item.equals(ComponentItemRegistry.AI_LIMITER)) {
-                translationBuilder.add((Item) item, "AI Limiter");
+            if (item.equals(ComponentItemRegistry.BBlock.AI_LIMITER)) {
+                translationBuilder.add((Block) item, "AI Limiter");
                 continue;
             }
             autoGenerateName(translationBuilder, item);
