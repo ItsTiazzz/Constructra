@@ -5,7 +5,7 @@ import net.minecraft.item.ItemConvertible;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
-interface Resource {
+public interface Resource {
     Identifier getIdentifier();
     ItemConvertible getRetrievableItem();
     Block getOriginBlock();

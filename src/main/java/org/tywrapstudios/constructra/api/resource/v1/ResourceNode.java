@@ -10,25 +10,27 @@ public class ResourceNode<T extends Resource> {
     private final T resource;
     private final ResourcePurity purity;
     private final BlockPos centre;
+    private final World world;
     private boolean obstructed;
 
-    public ResourceNode(T resource, ResourcePurity purity, BlockPos centre, boolean obstructed) {
+    public ResourceNode(T resource, ResourcePurity purity, BlockPos centre, World world, boolean obstructed) {
         this.resource = resource;
         this.purity = purity;
         this.centre = centre;
+        this.world = world;
         this.obstructed = obstructed;
     }
 
-    public ResourceNode(T resource, BlockPos centre, boolean obstructed) {
-        this(resource, ResourcePurity.random(), centre, obstructed);
+    public ResourceNode(T resource, BlockPos centre, World world, boolean obstructed) {
+        this(resource, ResourcePurity.random(), centre, world, obstructed);
     }
 
-    public ResourceNode(T resource, BlockPos centre) {
-        this(resource, centre, new Random().nextBoolean());
+    public ResourceNode(T resource, BlockPos centre, World world) {
+        this(resource, centre, world, new Random().nextBoolean());
     }
 
     public T getResource() {
-        assert this.resource != null;
+        assert this.resource != null : "Resource of Node is null: " + this;
         return this.resource;
     }
 
@@ -53,11 +55,15 @@ public class ResourceNode<T extends Resource> {
         setObstructed(false);
     }
 
+    public World getWorld() {
+        return this.world;
+    }
+
     public void setObstructed(boolean obstructed) {
         this.obstructed = obstructed;
     }
 
-    public boolean createOriginBlock(World world) {
+    protected boolean createOriginBlock(World world) {
         try {
             Constructra.LOGGER.debug("Creating origin block for: " + this);
             world.setBlockState(centre, resource.getOriginBlock().getDefaultState());

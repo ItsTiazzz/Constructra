@@ -4,13 +4,13 @@ import net.minecraft.block.Block;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.util.Identifier;
 
-public abstract class AbstractResource implements Resource {
+public class ImplementedResource implements Resource {
     private final Identifier identifier;
     private final ItemConvertible retrievableItem;
     private final ResourceRarity rarity;
     private final Block originBlock;
 
-    public AbstractResource(ItemConvertible retrievableItem, ResourceRarity rarity, Block originBlock, Identifier identifier) {
+    public ImplementedResource(ItemConvertible retrievableItem, ResourceRarity rarity, Block originBlock, Identifier identifier) {
         this.identifier = identifier;
         this.retrievableItem = retrievableItem;
         this.rarity = rarity;
@@ -19,21 +19,30 @@ public abstract class AbstractResource implements Resource {
 
     @Override
     public Identifier getIdentifier() {
-        return identifier;
+        return this.identifier;
     }
 
     @Override
     public ItemConvertible getRetrievableItem() {
-        return retrievableItem;
+        return this.retrievableItem;
     }
 
     @Override
     public ResourceRarity getRarity() {
-        return rarity;
+        return this.rarity;
     }
 
     @Override
     public Block getOriginBlock() {
-        return originBlock;
+        return this.originBlock;
+    }
+
+    @Override
+    public String toString() {
+        return this.getClass().getSimpleName() + "{" +
+                "originBlock=" + originBlock +
+                ", rarity=" + rarity +
+                ", retrievableItem=" + retrievableItem +
+                '}';
     }
 }

@@ -16,6 +16,9 @@
 		"main": [
 			"org.tywrapstudios.constructra.Constructra"
 		],
+		"client": [
+			"org.tywrapstudios.constructra.ConstructraClient"
+		],
 		"fabric-datagen": [
 			"org.tywrapstudios.constructra.util.datagen.ConstructraDataGenerator"
 		]

@@ -33,6 +33,13 @@ public class LangGeneration extends FabricLanguageProvider {
         translationBuilder.add("tag.item.constructra.crafting_components", "Component Items");
         translationBuilder.add(ComponentItemRegistry.Group.INSTANCE.langEntry, "Constructra - Components");
         translationBuilder.add(FuelItemRegistry.Group.INSTANCE.langEntry, "Constructra - Fuels");
+        translationBuilder.add("purity.none", "None");
+        translationBuilder.add("purity.impure", "Impure");
+        translationBuilder.add("purity.normal", "Normal");
+        translationBuilder.add("purity.pure", "Pure");
+        translationBuilder.add("resource.minecraft.iron", "Iron");
+        translationBuilder.add("resource.minecraft.gold", "Gold");
+        translationBuilder.add("text.constructra.prompt.mining_instruction", "Hold %s to start mining");
     }
 
     private static void autoGenerateName(TranslationBuilder translationBuilder, ItemConvertible item) {
