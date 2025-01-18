@@ -2,10 +2,12 @@ package org.tywrapstudios.constructra.client.rendering;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.option.GameOptions;
-import net.minecraft.client.option.KeyBinding;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import org.tywrapstudios.constructra.api.resource.v1.ResourceNode;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ResourceNodeHudRenderer {
     public void render(DrawContext context, ResourceNode<?> node) {
@@ -16,14 +18,15 @@ public class ResourceNodeHudRenderer {
         Text name = node.getResource().getName();
         Text purity = node.getPurity().toText();
 
-        //context.drawText(client.textRenderer, name, x, y, 0xFFFFFF, true);
-        context.drawTextWithBackground(client.textRenderer, name, x, y, client.textRenderer.getWidth(name), 0xFFFFFF);
-        //context.drawText(client.textRenderer, purity, x, y + 12, 0xFFFFFF, true);
-        context.drawTextWithBackground(client.textRenderer, purity, x, y + 12, client.textRenderer.getWidth(purity), 0xFFFFFF);
+        List<Text> texts = new ArrayList<>();
+        texts.add(name);
+        texts.add(purity);
+        context.drawTooltip(client.textRenderer, texts, x, y);
 
         if (node.isObstructed()) {
-            Text miningPrompt = Text.translatable("text.constructra.prompt.mining_instruction", client.options.attackKey.getBoundKeyLocalizedText().getString());
-            context.drawText(client.textRenderer, miningPrompt, x, y + 24, 0xFFFFFF, true);
+            Text miningPrompt = Text.translatable("text.constructra.prompt.mining_instruction", client.options.attackKey.getBoundKeyLocalizedText().getString())
+                    .formatted(Formatting.GOLD);
+            context.drawText(client.textRenderer, miningPrompt, x, y + 20, 0xFFFFFF, true);
         }
     }
 }

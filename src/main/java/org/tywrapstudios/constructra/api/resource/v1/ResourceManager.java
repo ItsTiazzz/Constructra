@@ -14,6 +14,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class ResourceManager {
     public static class Nodes {
+        // TODO: Make the NODES actually save with the world.
         protected static List<ResourceNode<?>> NODES = new CopyOnWriteArrayList<>();
 
         public static void addNode(ResourceNode<?> node, World world) {
