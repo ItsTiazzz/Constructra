@@ -8,9 +8,9 @@ import org.tywrapstudios.constructra.api.item.v1.EasyItemGroup;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.tywrapstudios.constructra.registry.Content.itemKey;
+import static org.tywrapstudios.constructra.registry.MainRegistry.itemKey;
 
-public class FuelItemRegistry {
+public class FuelItems {
     public static List<Item> FUEL_ITEMS = new ArrayList<>();
     public static List<Item> BIO_FUEL_ITEMS = new ArrayList<>();
 

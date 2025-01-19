@@ -2,13 +2,13 @@ package org.tywrapstudios.constructra.api.resource.v1;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.tywrapstudios.constructra.Constructra;
-import org.tywrapstudios.constructra.resource.Resources;
+import org.tywrapstudios.constructra.registry.CaRegistries;
+import org.tywrapstudios.constructra.registry.Resources;
 
 import java.util.Random;
 
@@ -17,7 +17,7 @@ public class ResourceNode<T extends Resource> {
         @Override
         public ResourceNode<?> decode(ByteBuf buf) {
             PacketByteBuf packetBuf = new PacketByteBuf(buf);
-            Resource resource = Resources.getFromId(Identifier.PACKET_CODEC.decode(buf));
+            Resource resource = CaRegistries.RESOURCE.get(Identifier.PACKET_CODEC.decode(buf));
             ResourcePurity purity = ResourcePurity.PACKET_CODEC.decode(buf);
             BlockPos pos = packetBuf.readBlockPos();
             boolean obstructed = packetBuf.readBoolean();
@@ -100,7 +100,7 @@ public class ResourceNode<T extends Resource> {
     }
 
     public static ResourceNode<?> empty() {
-        return new ResourceNode<>(Resources.EMPTY.get(), ResourcePurity.NONE, BlockPos.ORIGIN, false);
+        return new ResourceNode<>(Resources.EMPTY, ResourcePurity.NONE, BlockPos.ORIGIN, false);
     }
 
     public String toSimpleString() {

@@ -7,8 +7,7 @@ import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.PersistentState;
-import net.minecraft.world.World;
-import org.tywrapstudios.constructra.resource.Resources;
+import org.tywrapstudios.constructra.registry.CaRegistries;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -50,7 +49,7 @@ public class ResourceNodesState extends PersistentState {
                     nodeNbt.getInt("z")
             );
 
-            Resource resource = Resources.getFromId(Identifier.of(nodeNbt.getString("resource")));
+            Resource resource = CaRegistries.RESOURCE.get(Identifier.of(nodeNbt.getString("resource")));
             boolean obstructed = nodeNbt.getBoolean("obstructed");
 
             ResourceNode<?> node = new ResourceNode<>(resource, pos, obstructed);

@@ -21,12 +21,17 @@ public class ResourceNodeHudRenderer {
         List<Text> texts = new ArrayList<>();
         texts.add(name);
         texts.add(purity);
-        context.drawTooltip(client.textRenderer, texts, x, y);
+
+        Text miningPrompt = Text.translatable("text.constructra.prompt.mining_instruction", client.options.attackKey.getBoundKeyLocalizedText().getString())
+                .formatted(Formatting.GOLD);
 
         if (node.isObstructed()) {
-            Text miningPrompt = Text.translatable("text.constructra.prompt.mining_instruction", client.options.attackKey.getBoundKeyLocalizedText().getString())
-                    .formatted(Formatting.GOLD);
-            context.drawText(client.textRenderer, miningPrompt, x, y + 20, 0xFFFFFF, true);
+            miningPrompt = Text.translatable("text.constructra.prompt.mining_instruction_obstructed", client.options.attackKey.getBoundKeyLocalizedText().getString())
+                    .formatted(Formatting.GOLD)
+                    .append(Text.translatable("text.constructra.info.obstructed").formatted(Formatting.DARK_RED));
         }
+
+        context.drawTooltip(client.textRenderer, texts, x, y);
+        context.drawTooltip(client.textRenderer, miningPrompt, x, y + 30);
     }
 }

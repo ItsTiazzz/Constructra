@@ -8,13 +8,12 @@ import net.minecraft.registry.Registry;
 import org.tywrapstudios.constructra.api.item.v1.EasyItemGroup;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
-import static org.tywrapstudios.constructra.registry.Content.blockKey;
-import static org.tywrapstudios.constructra.registry.Content.itemKey;
+import static org.tywrapstudios.constructra.registry.MainRegistry.blockKey;
+import static org.tywrapstudios.constructra.registry.MainRegistry.itemKey;
 
-public class ComponentItemRegistry {
+public class ComponentItems {
     public static final List<Item> COMPONENT_ITEMS = new ArrayList<>();
 
     public static final Item ALCLAD_ALUMINIUM_SHEET;
@@ -24,7 +23,6 @@ public class ComponentItemRegistry {
     public static final Item AUTOMATED_WIRING;
     public static final Item BLACK_POWDER;
     public static final Item CABLE;
-    public static final Item TERBYSIUM_INGOT;
     public static final Item CIRCUIT_BOARD;
     public static final Item COMPUTER;
     public static final Item COOLING_SYSTEM;
@@ -61,6 +59,7 @@ public class ComponentItemRegistry {
     public static final Item POLYMER_RESIN;
     public static final Item QUANTUM_COMPUTER;
     public static final Item QUARTZ_CRYSTAL;
+    public static final Item TERBYSIUM_INGOT;
     public static final Item TERBYSIUM_WIRE;
     public static final Item RADIO_CONTROL_UNIT;
     public static final Item REINFORCED_IRON_PLATE;
@@ -86,7 +85,6 @@ public class ComponentItemRegistry {
         AUTOMATED_WIRING = create("automated_wiring");
         BLACK_POWDER = create("black_powder");
         CABLE = create("cable");
-        TERBYSIUM_INGOT =create("terbysium_ingot");
         CIRCUIT_BOARD = create("circuit_board");
         COMPUTER = create("computer");
         COOLING_SYSTEM = create("cooling_system");
@@ -123,6 +121,7 @@ public class ComponentItemRegistry {
         POLYMER_RESIN = create("polymer_resin");
         QUANTUM_COMPUTER = create("quantum_computer");
         QUARTZ_CRYSTAL = create("quartz_crystal");
+        TERBYSIUM_INGOT = create("terbysium_ingot");
         TERBYSIUM_WIRE = create("terbysium_wire");
         RADIO_CONTROL_UNIT = create("radio_control_unit");
         REINFORCED_IRON_PLATE = create("reinforced_iron_plate");

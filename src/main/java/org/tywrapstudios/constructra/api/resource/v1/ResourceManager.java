@@ -1,5 +1,9 @@
 package org.tywrapstudios.constructra.api.resource.v1;
 
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.Block;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.MinecraftServer;
@@ -7,14 +11,17 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.tywrapstudios.constructra.Constructra;
+import org.tywrapstudios.constructra.command.CaCommandImpl;
+import org.tywrapstudios.constructra.network.payload.NodeQueryC2SPayload;
+import org.tywrapstudios.constructra.network.payload.NodeQueryS2CPayload;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ResourceManager {
     public static class Nodes {
-        // TODO: Make the NODES actually save with the world.
-        private static final String STORAGE_ID = "constructra_resource_nodes";
+        private static final String STORAGE_ID = "resource_nodes";
+        static List<ResourceNode<?>> toRemove = new ArrayList<>();
 
         public static ResourceNodesState getOrCreateState(ServerWorld world) {
             return world.getPersistentStateManager().getOrCreate(ResourceNodesState.TYPE, STORAGE_ID);
@@ -53,6 +60,20 @@ public class ResourceManager {
             return getAtPos(new BlockPos(x, y, z), world);
         }
 
+        public static void purge(BlockPos centre, int range, ServerWorld world) {
+            ResourceNodesState state = getOrCreateState(world);
+            for (ResourceNode<?> node : state.getNodes()) {
+                boolean isWithinDistance = node.getCentre().isWithinDistance(centre, range);
+                Constructra.LOGGER.debug("Checking for purge at " + node.getCentre());
+                Constructra.LOGGER.debug("isWithinDistance: " + isWithinDistance + " for range " + range);
+                if (isWithinDistance) {
+                    toRemove.add(node);
+                    Constructra.LOGGER.warn("Marked ResourceNode for removal at " + node.getCentre());
+                }
+            }
+            state.markDirty();
+        }
+
         public static void flush(ServerWorld world) {
             flush("Unknown reason", world);
         }
@@ -64,7 +85,6 @@ public class ResourceManager {
         }
 
         public static void tick(MinecraftServer server) {
-            List<ResourceNode<?>> toRemove = new ArrayList<>();
             ResourceNodesState state = getOrCreateState(server.getOverworld());
 
             for (ResourceNode<?> node : state.getNodes()) {
@@ -98,6 +118,19 @@ public class ResourceManager {
                 toRemove.add(node);
                 Constructra.LOGGER.warn("Marked ResourceNode for removal at " + pos);
             }
+        }
+
+        public static void initializeServer() {
+            ServerTickEvents.END_SERVER_TICK.register(ResourceManager.Nodes::tick);
+
+            PayloadTypeRegistry.playC2S().register(NodeQueryC2SPayload.ID, NodeQueryC2SPayload.CODEC);
+            PayloadTypeRegistry.playS2C().register(NodeQueryS2CPayload.ID, NodeQueryS2CPayload.CODEC);
+            ServerPlayNetworking.registerGlobalReceiver(NodeQueryC2SPayload.ID, (load, ctx) -> {
+                ResourceNode<?> node = ResourceManager.Nodes.getAtPos(load.pos(), ctx.server().getOverworld());
+                if (node != null) {
+                    ServerPlayNetworking.send(ctx.player(), new NodeQueryS2CPayload(node));
+                }
+            });
         }
     }
 }

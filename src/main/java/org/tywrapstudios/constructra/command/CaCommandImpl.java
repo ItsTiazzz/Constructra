@@ -2,14 +2,16 @@ package org.tywrapstudios.constructra.command;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.BoolArgumentType;
-import net.minecraft.command.argument.Vec3ArgumentType;
+import com.mojang.brigadier.arguments.IntegerArgumentType;
+import net.minecraft.command.CommandRegistryAccess;
+import net.minecraft.command.argument.BlockPosArgumentType;
+import net.minecraft.command.argument.RegistryEntryReferenceArgumentType;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
-import org.tywrapstudios.constructra.api.command.v1.EnumArgumentType;
-import org.tywrapstudios.constructra.resource.Resources;
+import org.tywrapstudios.constructra.registry.CaRegistries;
 
 public class CaCommandImpl {
-    public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
+    public static void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess access) {
         var constructraCommand = CommandManager
                 .literal("constructra")
                 .executes(CaCommandExecutables::execute)
@@ -34,16 +36,30 @@ public class CaCommandImpl {
                 .build();
 
         var posArg = CommandManager
-                .argument("pos", Vec3ArgumentType.vec3())
+                .argument("pos", BlockPosArgumentType.blockPos())
                 .build();
 
         var typeArg = CommandManager
-                .argument("type", EnumArgumentType.enumArgument(Resources.class))
+                .argument("type", RegistryEntryReferenceArgumentType.registryEntry(access, CaRegistries.Keys.RESOURCE))
                 .build();
 
         var obsArg = CommandManager
                 .argument("obstructed", BoolArgumentType.bool())
                 .executes(CaCommandExecutables::spawnNode)
+                .build();
+
+        var purgeCommand = CommandManager
+                .literal("purge")
+                .build();
+
+        var posArg2 = CommandManager
+                .argument("pos", BlockPosArgumentType.blockPos())
+                .executes(CaCommandExecutables::purgeNode)
+                .build();
+
+        var rangeArg = CommandManager
+                .argument("range", IntegerArgumentType.integer(0))
+                .executes(CaCommandExecutables::purgeRangedNode)
                 .build();
 
         var reloadCommand = CommandManager
@@ -62,5 +78,8 @@ public class CaCommandImpl {
         spawnCommand.addChild(posArg);
         posArg.addChild(typeArg);
         typeArg.addChild(obsArg);
+        nodesCommand.addChild(purgeCommand);
+        purgeCommand.addChild(posArg2);
+        posArg2.addChild(rangeArg);
     }
 }

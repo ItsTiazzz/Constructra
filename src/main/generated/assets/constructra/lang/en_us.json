@@ -104,5 +104,7 @@
   "text.constructra.command.error.invalid_enum": "Invalid enum value",
   "text.constructra.command.error.non-overworld": "Attempted to manually place ResourceNode in non-overworld World. Skipping.",
   "text.constructra.command.flush": "Flushed all nodes from world.",
-  "text.constructra.prompt.mining_instruction": "Hold %s to start mining"
+  "text.constructra.info.obstructed": "(Obstructed)",
+  "text.constructra.prompt.mining_instruction": "Hold %s to start mining",
+  "text.constructra.prompt.mining_instruction_obstructed": "Hold %s to start mining "
 }

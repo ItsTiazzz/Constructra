@@ -8,13 +8,13 @@ public class ImplementedResource implements Resource {
     private final Identifier identifier;
     private final ItemConvertible retrievableItem;
     private final ResourceRarity rarity;
-    private final Block originBlock;
+    private final Block harvestBlock;
 
-    public ImplementedResource(ItemConvertible retrievableItem, ResourceRarity rarity, Block originBlock, Identifier identifier) {
+    public ImplementedResource(ItemConvertible retrievableItem, ResourceRarity rarity, Block harvestBlock, Identifier identifier) {
         this.identifier = identifier;
         this.retrievableItem = retrievableItem;
         this.rarity = rarity;
-        this.originBlock = originBlock;
+        this.harvestBlock = harvestBlock;
     }
 
     @Override
@@ -34,13 +34,13 @@ public class ImplementedResource implements Resource {
 
     @Override
     public Block getHarvestBlock() {
-        return this.originBlock;
+        return this.harvestBlock;
     }
 
     @Override
     public String toString() {
         return this.getClass().getSimpleName() + "{" +
-                "originBlock=" + originBlock +
+                "harvestBlock=" + harvestBlock +
                 ", rarity=" + rarity +
                 ", retrievableItem=" + retrievableItem +
                 '}';

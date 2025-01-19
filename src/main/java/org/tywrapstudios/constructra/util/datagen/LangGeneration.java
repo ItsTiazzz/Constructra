@@ -3,13 +3,12 @@ package org.tywrapstudios.constructra.util.datagen;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
 import net.minecraft.block.Block;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.registry.RegistryWrapper;
 import org.tywrapstudios.constructra.Constructra;
-import org.tywrapstudios.constructra.registry.ComponentItemRegistry;
-import org.tywrapstudios.constructra.registry.Content;
-import org.tywrapstudios.constructra.registry.FuelItemRegistry;
+import org.tywrapstudios.constructra.registry.ComponentItems;
+import org.tywrapstudios.constructra.registry.MainRegistry;
+import org.tywrapstudios.constructra.registry.FuelItems;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -20,8 +19,8 @@ public class LangGeneration extends FabricLanguageProvider {
 
     @Override
     public void generateTranslations(RegistryWrapper.WrapperLookup wrapperLookup, TranslationBuilder translationBuilder) {
-        for (ItemConvertible item : Content.ALL_ITEM_CONVERTIBLE_CONTENT) {
-            if (item.equals(ComponentItemRegistry.BBlock.AI_LIMITER)) {
+        for (ItemConvertible item : MainRegistry.ALL_ITEM_CONVERTIBLE_CONTENT) {
+            if (item.equals(ComponentItems.BBlock.AI_LIMITER)) {
                 translationBuilder.add((Block) item, "AI Limiter");
                 continue;
             }
@@ -31,8 +30,8 @@ public class LangGeneration extends FabricLanguageProvider {
         translationBuilder.add("tag.item.constructra.industrial_fuels", "Industrial Fuels");
         translationBuilder.add("tag.item.constructra.biological_fuels", "Biological Fuels");
         translationBuilder.add("tag.item.constructra.crafting_components", "Component Items");
-        translationBuilder.add(ComponentItemRegistry.Group.INSTANCE.langEntry, "Constructra - Components");
-        translationBuilder.add(FuelItemRegistry.Group.INSTANCE.langEntry, "Constructra - Fuels");
+        translationBuilder.add(ComponentItems.Group.INSTANCE.langEntry, "Constructra - Components");
+        translationBuilder.add(FuelItems.Group.INSTANCE.langEntry, "Constructra - Fuels");
         translationBuilder.add("purity.none", "None");
         translationBuilder.add("purity.impure", "Impure");
         translationBuilder.add("purity.normal", "Normal");
@@ -41,6 +40,8 @@ public class LangGeneration extends FabricLanguageProvider {
         translationBuilder.add("resource.minecraft.gold", "Gold");
         translationBuilder.add("resource.constructra.empty", "Empty");
         translationBuilder.add("text.constructra.prompt.mining_instruction", "Hold %s to start mining");
+        translationBuilder.add("text.constructra.prompt.mining_instruction_obstructed", "Hold %s to start mining ");
+        translationBuilder.add("text.constructra.info.obstructed", "(Obstructed)");
         translationBuilder.add("text.constructra.command.constructra",
                 """
                         Hello %s!
