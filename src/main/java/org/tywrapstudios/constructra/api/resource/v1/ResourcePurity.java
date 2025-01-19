@@ -1,21 +1,36 @@
 package org.tywrapstudios.constructra.api.resource.v1;
 
+import io.netty.buffer.ByteBuf;
+import net.minecraft.network.codec.PacketCodec;
+import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.StringIdentifiable;
+import net.minecraft.util.function.ValueLists;
 
 import java.util.Random;
+import java.util.function.IntFunction;
+import java.util.function.ToIntFunction;
 
 public enum ResourcePurity implements StringIdentifiable {
-    NONE("none", Formatting.RED),
-    IMPURE("impure", Formatting.DARK_AQUA),
-    NORMAL("normal", Formatting.GOLD),
-    PURE("pure", Formatting.LIGHT_PURPLE),;
+    NONE(0, "none", Formatting.RED),
+    IMPURE(1, "impure", Formatting.DARK_AQUA),
+    NORMAL(2, "normal", Formatting.GOLD),
+    PURE(3, "pure", Formatting.LIGHT_PURPLE),;
 
+    private final int index;
     private final String name;
     private final Formatting formatting;
 
-    ResourcePurity(String name, Formatting formatting) {
+    public static final IntFunction<ResourcePurity> ID_TO_VALUE = ValueLists.createIdToValueFunction(
+            (ToIntFunction<ResourcePurity>) (value) -> value.index, values(), ValueLists.OutOfBoundsHandling.ZERO
+    );
+    public static final PacketCodec<ByteBuf, ResourcePurity> PACKET_CODEC = PacketCodecs.indexed(
+            ID_TO_VALUE, (value) -> value.index
+    );
+
+    ResourcePurity(int index, String name, Formatting formatting) {
+        this.index = index;
         this.name = name;
         this.formatting = formatting;
     }

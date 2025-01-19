@@ -33,7 +33,7 @@ public class ImplementedResource implements Resource {
     }
 
     @Override
-    public Block getOriginBlock() {
+    public Block getHarvestBlock() {
         return this.originBlock;
     }
 

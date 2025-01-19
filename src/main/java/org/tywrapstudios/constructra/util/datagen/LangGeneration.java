@@ -39,7 +39,19 @@ public class LangGeneration extends FabricLanguageProvider {
         translationBuilder.add("purity.pure", "Pure");
         translationBuilder.add("resource.minecraft.iron", "Iron");
         translationBuilder.add("resource.minecraft.gold", "Gold");
+        translationBuilder.add("resource.constructra.empty", "Empty");
         translationBuilder.add("text.constructra.prompt.mining_instruction", "Hold %s to start mining");
+        translationBuilder.add("text.constructra.command.constructra",
+                """
+                        Hello %s!
+                        Welcome to Constructra, a mod centred around the creation of machines, tools and automation.
+                        You can access the commands by using /constructra, /ca is a shorthand route!
+                        If you don't know where to start, feel free to generate yourself either a codex item or press the keybind button to open the codex menu!
+                        Have a good day!
+                        Nexatek, Build the Future, One Bolt at a Time.""");
+        translationBuilder.add("text.constructra.command.error.invalid_enum", "Invalid enum value");
+        translationBuilder.add("text.constructra.command.error.non-overworld", "Attempted to manually place ResourceNode in non-overworld World. Skipping.");
+        translationBuilder.add("text.constructra.command.flush", "Flushed all nodes from world.");
     }
 
     private static void autoGenerateName(TranslationBuilder translationBuilder, ItemConvertible item) {

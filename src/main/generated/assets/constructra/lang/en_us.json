@@ -94,10 +94,15 @@
   "purity.none": "None",
   "purity.normal": "Normal",
   "purity.pure": "Pure",
+  "resource.constructra.empty": "Empty",
   "resource.minecraft.gold": "Gold",
   "resource.minecraft.iron": "Iron",
   "tag.item.constructra.biological_fuels": "Biological Fuels",
   "tag.item.constructra.crafting_components": "Component Items",
   "tag.item.constructra.industrial_fuels": "Industrial Fuels",
+  "text.constructra.command.constructra": "Hello %s!\nWelcome to Constructra, a mod centred around the creation of machines, tools and automation.\nYou can access the commands by using /constructra, /ca is a shorthand route!\nIf you don't know where to start, feel free to generate yourself either a codex item or press the keybind button to open the codex menu!\nHave a good day!\nNexatek, Build the Future, One Bolt at a Time.",
+  "text.constructra.command.error.invalid_enum": "Invalid enum value",
+  "text.constructra.command.error.non-overworld": "Attempted to manually place ResourceNode in non-overworld World. Skipping.",
+  "text.constructra.command.flush": "Flushed all nodes from world.",
   "text.constructra.prompt.mining_instruction": "Hold %s to start mining"
 }

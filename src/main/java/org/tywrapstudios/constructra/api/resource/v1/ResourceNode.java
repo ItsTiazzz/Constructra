@@ -1,32 +1,58 @@
 package org.tywrapstudios.constructra.api.resource.v1;
 
+import io.netty.buffer.ByteBuf;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.RegistryByteBuf;
+import net.minecraft.network.codec.PacketCodec;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.tywrapstudios.constructra.Constructra;
+import org.tywrapstudios.constructra.resource.Resources;
 
 import java.util.Random;
 
 public class ResourceNode<T extends Resource> {
+    public static final PacketCodec<ByteBuf, ResourceNode<?>> PACKET_CODEC = new PacketCodec<>() {
+        @Override
+        public ResourceNode<?> decode(ByteBuf buf) {
+            PacketByteBuf packetBuf = new PacketByteBuf(buf);
+            Resource resource = Resources.getFromId(Identifier.PACKET_CODEC.decode(buf));
+            ResourcePurity purity = ResourcePurity.PACKET_CODEC.decode(buf);
+            BlockPos pos = packetBuf.readBlockPos();
+            boolean obstructed = packetBuf.readBoolean();
+
+            return new ResourceNode<>(resource, purity, pos, obstructed);
+        }
+
+        @Override
+        public void encode(ByteBuf buf, ResourceNode<?> value) {
+            PacketByteBuf packetBuf = new PacketByteBuf(buf);
+            Identifier.PACKET_CODEC.encode(buf, value.getResource().getIdentifier());
+            ResourcePurity.PACKET_CODEC.encode(buf, value.getPurity());
+            packetBuf.writeBlockPos(value.getCentre());
+            packetBuf.writeBoolean(value.isObstructed());
+        }
+    };
+
     private final T resource;
     private final ResourcePurity purity;
     private final BlockPos centre;
-    private final World world;
     private boolean obstructed;
 
-    public ResourceNode(T resource, ResourcePurity purity, BlockPos centre, World world, boolean obstructed) {
+    public ResourceNode(T resource, ResourcePurity purity, BlockPos centre, boolean obstructed) {
         this.resource = resource;
         this.purity = purity;
         this.centre = centre;
-        this.world = world;
         this.obstructed = obstructed;
     }
 
-    public ResourceNode(T resource, BlockPos centre, World world, boolean obstructed) {
-        this(resource, ResourcePurity.random(), centre, world, obstructed);
+    public ResourceNode(T resource, BlockPos centre, boolean obstructed) {
+        this(resource, ResourcePurity.random(), centre, obstructed);
     }
 
-    public ResourceNode(T resource, BlockPos centre, World world) {
-        this(resource, centre, world, new Random().nextBoolean());
+    public ResourceNode(T resource, BlockPos centre) {
+        this(resource, centre, new Random().nextBoolean());
     }
 
     public T getResource() {
@@ -48,15 +74,11 @@ public class ResourceNode<T extends Resource> {
     }
 
     public boolean isObstructed() {
-        return this.obstructed;
+        return this.obstructed && Constructra.config().resources.do_obstructions;
     }
 
     public void deObstruct() {
         setObstructed(false);
-    }
-
-    public World getWorld() {
-        return this.world;
     }
 
     public void setObstructed(boolean obstructed) {
@@ -66,7 +88,7 @@ public class ResourceNode<T extends Resource> {
     protected boolean createOriginBlock(World world) {
         try {
             Constructra.LOGGER.debug("Creating origin block for: " + this);
-            world.setBlockState(centre, resource.getOriginBlock().getDefaultState());
+            world.setBlockState(centre, resource.getHarvestBlock().getDefaultState());
             return true;
         } catch (Exception e) {
             if (this.getResource() != null) {
@@ -75,6 +97,16 @@ public class ResourceNode<T extends Resource> {
             e.printStackTrace();
             return false;
         }
+    }
+
+    public static ResourceNode<?> empty() {
+        return new ResourceNode<>(Resources.EMPTY.get(), ResourcePurity.NONE, BlockPos.ORIGIN, false);
+    }
+
+    public String toSimpleString() {
+        return "ResourceNode{" +
+                "resource=" + resource.getIdentifier() +
+                "}";
     }
 
     @Override
