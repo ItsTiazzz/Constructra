@@ -7,6 +7,7 @@ import org.tywrapstudios.constructra.Constructra;
 import org.tywrapstudios.constructra.api.resource.v1.ImplementedResource;
 import org.tywrapstudios.constructra.api.resource.v1.ResourceRarity;
 
+// TODO: Replace this and with that EnumArgumentType with the more robust Registry system Minecraft has.
 public enum Resources {
     EMPTY(new ImplementedResource(Items.AIR, ResourceRarity.NONE, Blocks.BARRIER, Constructra.id("empty"))),
     IRON(new ImplementedResource(Items.RAW_IRON, ResourceRarity.STARTER, Blocks.IRON_ORE, Identifier.ofVanilla("iron"))),
