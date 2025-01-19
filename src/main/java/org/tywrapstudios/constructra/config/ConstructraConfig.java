@@ -29,14 +29,14 @@ public class ConstructraConfig extends AbstractConfig {
                 Default: ca""")
         public String command_alias = "ca";
         @Comment("""
-                The permission level required to use the Nodes commands.
+                The permission level required to use the Node commands in general.
                 Default: 2""")
         public int perm_lvl_nodes = 2;
         @Comment("""
-                The permission level required to flush ALL Nodes in the world.
-                Note that this is a dangerous permission to give as it breaks the entire world!
+                The permission level required to remove Nodes from the world. (Both nodes flush and nodes purge.)
+                Note that this is a dangerous permission to give as it can break the entire world!
                 Default: 4""")
-        public int perm_lvl_nodes_flush = 4;
+        public int perm_lvl_nodes_removal = 4;
         @Comment("""
                 The permission level required to reload the Constructra config.
                 Default: 2""")
