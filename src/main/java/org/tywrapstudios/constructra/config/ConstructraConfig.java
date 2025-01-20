@@ -20,6 +20,10 @@ public class ConstructraConfig extends AbstractConfig {
                 Whether Nodes can be obstructed. When set to false, Nodes don't need to be destructed first in order to be harvested from.
                 Default: true""")
         public boolean do_obstructions = true;
+        @Comment("""
+                Whether to display certain visual hints as to what block is the exact ResourceNode Centre. e.g. through the use of particles.
+                Default: false""")
+        public boolean visualize_centres = false;
     }
     @Comment("Config related to Commands.")
     public CommandConfig commands = new CommandConfig();

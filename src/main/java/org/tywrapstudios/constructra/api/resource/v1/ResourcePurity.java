@@ -35,6 +35,19 @@ public enum ResourcePurity implements StringIdentifiable {
         this.formatting = formatting;
     }
 
+    public int getIndex() {
+        return this.index;
+    }
+
+    public static ResourcePurity indexed(int index) {
+        return switch (index) {
+            case 1 -> ResourcePurity.IMPURE;
+            case 2 -> ResourcePurity.NORMAL;
+            case 3 -> ResourcePurity.PURE;
+            default -> ResourcePurity.NONE;
+        };
+    }
+
     public static ResourcePurity random(Random random) {
         int i = random.nextInt(3);
         return switch (i) {
@@ -56,6 +69,15 @@ public enum ResourcePurity implements StringIdentifiable {
             case "PURE" -> PURE;
             case "RANDOM" -> random();
             default -> NONE;
+        };
+    }
+
+    public float getMiningTimeMultiplier() {
+        return switch (this) {
+            case PURE -> 0.5f;
+            case NORMAL -> 1.0f;
+            case IMPURE -> 1.5f;
+            case NONE -> 2.0f;
         };
     }
 

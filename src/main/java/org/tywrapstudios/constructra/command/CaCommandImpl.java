@@ -51,11 +51,11 @@ public class CaCommandImpl {
 
         var posArg2 = CommandManager
                 .argument("pos", BlockPosArgumentType.blockPos())
-                .executes(CaCommandExecutables::purgeNode).build();
+                .executes(ctx -> CaCommandExecutables.purgeNode(ctx, false)).build();
 
         var rangeArg = CommandManager
                 .argument("range", IntegerArgumentType.integer(0))
-                .executes(CaCommandExecutables::purgeRangedNode).build();
+                .executes(ctx -> CaCommandExecutables.purgeNode(ctx, true)).build();
 
         var reloadCommand = CommandManager
                 .literal("reload")

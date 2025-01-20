@@ -7,6 +7,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.command.argument.BlockPosArgumentType;
 import net.minecraft.command.argument.RegistryEntryReferenceArgumentType;
 import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
@@ -14,7 +15,10 @@ import net.minecraft.world.World;
 import org.tywrapstudios.constructra.Constructra;
 import org.tywrapstudios.constructra.api.resource.v1.Resource;
 import org.tywrapstudios.constructra.api.resource.v1.ResourceManager;
+import org.tywrapstudios.constructra.api.resource.v1.ResourceNode;
 import org.tywrapstudios.constructra.registry.CaRegistries;
+
+import java.util.List;
 
 public class CaCommandExecutables {
     protected static int reload (CommandContext<ServerCommandSource> ctx) {
@@ -31,16 +35,15 @@ public class CaCommandExecutables {
         return 1;
     }
 
-    protected static int purgeNode(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException {
+    protected static int purgeNode(CommandContext<ServerCommandSource> ctx, boolean hasRange) throws CommandSyntaxException {
         BlockPos pos = BlockPosArgumentType.getLoadedBlockPos(ctx,"pos");
-        ResourceManager.Nodes.purge(pos, 1, ctx.getSource().getWorld());
-        return 1;
-    }
-
-    protected static int purgeRangedNode(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException {
-        BlockPos pos = BlockPosArgumentType.getLoadedBlockPos(ctx,"pos");
-        int range = IntegerArgumentType.getInteger(ctx, "range");
-        ResourceManager.Nodes.purge(pos, range, ctx.getSource().getWorld());
+        int range = hasRange ? IntegerArgumentType.getInteger(ctx,"range") : 1;
+        ServerCommandSource source = ctx.getSource();
+        int initialNodeListSize = ResourceManager.Nodes.getOrCreateState(source.getWorld()).getNodes().size();
+        source.sendFeedback(() -> Text.translatable("text.constructra.command.purge_start", range).formatted(Formatting.GREEN), true);
+        List<ResourceNode<?>> purgedNodes = ResourceManager.Nodes.purge(pos, range, source.getWorld(), resourceNode -> source.sendFeedback(() -> Text.translatable("text.constructra.command.purge", resourceNode.getResource().getName(), pos.toShortString()).formatted(Formatting.RED), true));
+        MutableText endText = purgedNodes.isEmpty() ? Text.translatable("text.constructra.command.purge_end_empty") : purgedNodes.size() == initialNodeListSize ? Text.translatable("text.constructra.command.purge_end_inefficient", purgedNodes.size()) : Text.translatable("text.constructra.command.purge_end", purgedNodes.size(), initialNodeListSize, initialNodeListSize - purgedNodes.size());
+        source.sendFeedback(() -> endText.formatted(Formatting.GREEN), true);
         return 1;
     }
 

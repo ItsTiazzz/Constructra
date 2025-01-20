@@ -53,6 +53,11 @@ public class LangGeneration extends FabricLanguageProvider {
         translationBuilder.add("text.constructra.command.error.invalid_enum", "Invalid enum value");
         translationBuilder.add("text.constructra.command.error.non-overworld", "Attempted to manually place ResourceNode in non-overworld World. Skipping.");
         translationBuilder.add("text.constructra.command.flush", "Flushed all nodes from world.");
+        translationBuilder.add("text.constructra.command.purge_start", "Starting Node Purge with range %s...");
+        translationBuilder.add("text.constructra.command.purge", "Found and removed Node of type [%s] at [%s].");
+        translationBuilder.add("text.constructra.command.purge_end_empty", "No Nodes were purged. Perhaps try a larger <range>?");
+        translationBuilder.add("text.constructra.command.purge_end_inefficient", "The amount of Purged Nodes equalled the initial amount of Nodes in the world. For a more efficient Full Node Removal, consider using /[ca||constructra] nodes flush.");
+        translationBuilder.add("text.constructra.command.purge_end", "End of Node Purge. Purged %s/%s Nodes in World. (%s left)");
     }
 
     private static void autoGenerateName(TranslationBuilder translationBuilder, ItemConvertible item) {
