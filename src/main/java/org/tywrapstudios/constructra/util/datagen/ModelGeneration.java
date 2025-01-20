@@ -6,6 +6,7 @@ import net.minecraft.block.Block;
 import net.minecraft.client.data.BlockStateModelGenerator;
 import net.minecraft.client.data.ItemModelGenerator;
 import net.minecraft.client.data.Models;
+import net.minecraft.client.data.TextureMap;
 import net.minecraft.item.Item;
 import org.tywrapstudios.constructra.registry.ComponentItems;
 import org.tywrapstudios.constructra.registry.FuelItems;
@@ -20,11 +21,12 @@ public class ModelGeneration extends FabricModelProvider {
     @Override
     public void generateBlockStateModels(BlockStateModelGenerator generator) {
         for (Block block : BBlock.COMPONENT_BLOCKS) {
-            if (BBlock.COMPONENT_BLOCKS_NON_CUBE.contains(block)) {
+            if (BBlock.COMPONENT_BLOCKS_NON_CUBE.contains(block) || block == BBlock.STEEL_BEAM) {
                 continue;
             }
             generator.registerSimpleCubeAll(block);
         }
+        generator.registerNorthDefaultHorizontalRotatable(BBlock.STEEL_BEAM, TextureMap.sideFrontTop(BBlock.STEEL_BEAM));
     }
 
     @Override

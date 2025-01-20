@@ -2,14 +2,18 @@ package org.tywrapstudios.constructra.registry;
 
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.PillarBlock;
 import net.minecraft.item.*;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import org.tywrapstudios.constructra.api.block.v1.FrameShapedBlock;
 import org.tywrapstudios.constructra.api.item.v1.EasyItemGroup;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.tywrapstudios.constructra.Constructra.id;
 import static org.tywrapstudios.constructra.registry.MainRegistry.blockKey;
 import static org.tywrapstudios.constructra.registry.MainRegistry.itemKey;
 
@@ -177,13 +181,14 @@ public class ComponentItems {
             ASSEMBLY_DIRECTOR_SYSTEM = createNonCube("assembly_director_system");
             CONCRETE = create("concrete");
             ENCASED_INDUSTRIAL_BEAM = create("encased_industrial_beam");
-            FUSED_MODULAR_FRAME = createNonCube("fused_modular_frame");
-            HEAVY_MODULAR_FRAME = createNonCube("heavy_modular_frame");
+            FUSED_MODULAR_FRAME = createFrame("fused_modular_frame");
+            HEAVY_MODULAR_FRAME = createFrame("heavy_modular_frame");
             MODULAR_FRAME = createNonCube("modular_frame");
             NUCLEAR_PASTA = createNonCube("nuclear_pasta");
             PRESSURE_CONVERSION_CUBE = createNonCube("pressure_conversion_cube");
-            STEEL_BEAM = create("steel_beam");
-            VERSATILE_FRAMEWORK = createNonCube("versatile_framework");
+            STEEL_BEAM = createNonCube("steel_beam", new PillarBlock(AbstractBlock.Settings.copy(Blocks.IRON_BLOCK)
+                    .registryKey(blockKey("steel_beam"))));
+            VERSATILE_FRAMEWORK = createFrame("versatile_framework");
         }
 
         private static Block create(String id, Block block) {
@@ -214,6 +219,12 @@ public class ComponentItems {
 
         private static Block createNonCube(String id) {
             Block block = new Block(AbstractBlock.Settings.create()
+                    .registryKey(blockKey(id)));
+            return createNonCube(id, block);
+        }
+
+        private static Block createFrame(String id) {
+            Block block = new FrameShapedBlock(AbstractBlock.Settings.create()
                     .registryKey(blockKey(id)));
             return createNonCube(id, block);
         }
