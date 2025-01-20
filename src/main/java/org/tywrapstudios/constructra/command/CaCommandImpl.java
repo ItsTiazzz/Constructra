@@ -59,6 +59,7 @@ public class CaCommandImpl {
 
         var reloadCommand = CommandManager
                 .literal("reload")
+                .requires(source -> source.hasPermissionLevel(cc.perm_lvl_reload))
                 .executes(CaCommandExecutables::reload).build();
 
         dispatcher.getRoot().addChild(constructraCommand);
