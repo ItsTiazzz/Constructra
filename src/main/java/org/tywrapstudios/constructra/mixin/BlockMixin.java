@@ -18,9 +18,10 @@ public abstract class BlockMixin extends AbstractBlock {
 
     @Override
     protected void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
-        if (ResourceManager.Nodes.isInNode(pos, world)) { 
-           world.setBlockState(pos, state);
+        if (!(world instanceof ServerWorld serverWorld)) {
+            return;
+        } else if (ResourceManager.Nodes.isInNode(pos, serverWorld)) { 
+            world.setBlockState(pos, state);
         }
-        super.onStateReplaced(state, world, pos, newState, moved);
     }
 }
