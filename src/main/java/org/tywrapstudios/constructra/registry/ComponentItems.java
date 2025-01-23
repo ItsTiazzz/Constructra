@@ -7,6 +7,7 @@ import net.minecraft.block.PillarBlock;
 import net.minecraft.item.*;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import org.tywrapstudios.constructra.api.block.v1.BeamTexturedBlock;
 import org.tywrapstudios.constructra.api.block.v1.FrameShapedBlock;
 import org.tywrapstudios.constructra.api.item.v1.EasyItemGroup;
 
@@ -186,7 +187,7 @@ public class ComponentItems {
             MODULAR_FRAME = createNonCube("modular_frame");
             NUCLEAR_PASTA = createNonCube("nuclear_pasta");
             PRESSURE_CONVERSION_CUBE = createNonCube("pressure_conversion_cube");
-            STEEL_BEAM = createNonCube("steel_beam", new PillarBlock(AbstractBlock.Settings.copy(Blocks.IRON_BLOCK)
+            STEEL_BEAM = createNonCube("steel_beam", new BeamTexturedBlock(AbstractBlock.Settings.copy(Blocks.IRON_BLOCK)
                     .registryKey(blockKey("steel_beam"))));
             VERSATILE_FRAMEWORK = createFrame("versatile_framework");
         }

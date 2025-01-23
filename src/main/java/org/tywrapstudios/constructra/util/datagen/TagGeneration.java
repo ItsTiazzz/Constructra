@@ -3,11 +3,13 @@ package org.tywrapstudios.constructra.util.datagen;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.registry.RegistryWrapper;
 import org.tywrapstudios.constructra.Constructra;
 import org.tywrapstudios.constructra.registry.ComponentItems;
 import org.tywrapstudios.constructra.registry.FuelItems;
+import org.tywrapstudios.constructra.registry.Resources;
 import org.tywrapstudios.constructra.registry.Tags;
 
 import java.util.concurrent.CompletableFuture;
@@ -45,6 +47,24 @@ public class TagGeneration {
                         .add(item);
                 Constructra.LOGGER.debug("You're it! Fuel Item: " + item);
             }
+            getOrCreateTagBuilder(Tags.BBlocks.HARVESTABLE.asItemTag())
+                    .add(Blocks.IRON_ORE.asItem())
+                    .add(Blocks.GOLD_ORE.asItem())
+                    .add(Resources.DEV_BLOCK.asItem());
+        }
+    }
+
+    public static class BBlocks extends FabricTagProvider.BlockTagProvider {
+        public BBlocks(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture) {
+            super(output, registriesFuture);
+        }
+
+        @Override
+        protected void configure(RegistryWrapper.WrapperLookup wrapperLookup) {
+            getOrCreateTagBuilder(Tags.BBlocks.HARVESTABLE.get())
+                    .add(Blocks.IRON_ORE)
+                    .add(Blocks.GOLD_ORE)
+                    .add(Resources.DEV_BLOCK);
         }
     }
 }

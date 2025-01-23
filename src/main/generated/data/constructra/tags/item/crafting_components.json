@@ -7,7 +7,6 @@
     "constructra:automated_wiring",
     "constructra:black_powder",
     "constructra:cable",
-    "constructra:terbysium_ingot",
     "constructra:circuit_board",
     "constructra:computer",
     "constructra:cooling_system",
@@ -42,6 +41,7 @@
     "constructra:polymer_resin",
     "constructra:quantum_computer",
     "constructra:quartz_crystal",
+    "constructra:terbysium_ingot",
     "constructra:terbysium_wire",
     "constructra:radio_control_unit",
     "constructra:reinforced_iron_plate",
@@ -61,7 +61,6 @@
     "constructra:ai_limiter",
     "constructra:concrete",
     "constructra:encased_industrial_beam",
-    "constructra:steel_beam",
     "constructra:adaptive_control_unit",
     "constructra:assembly_director_system",
     "constructra:fused_modular_frame",
@@ -69,6 +68,7 @@
     "constructra:modular_frame",
     "constructra:nuclear_pasta",
     "constructra:pressure_conversion_cube",
+    "constructra:steel_beam",
     "constructra:versatile_framework"
   ]
 }

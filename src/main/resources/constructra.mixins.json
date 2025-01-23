@@ -3,9 +3,10 @@
   "package": "org.tywrapstudios.constructra.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "BlockMixin"
+  ],
+  "client": [
   ],
   "injectors": {
     "defaultRequire": 1
-	}
+  }
 }
