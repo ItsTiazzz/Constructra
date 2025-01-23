@@ -1,8 +1,10 @@
 package org.tywrapstudios.constructra;
 
+import com.mojang.brigadier.context.CommandContext;
 import net.fabricmc.api.ModInitializer;
 
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.util.Identifier;
 import net.tywrapstudios.blossombridge.api.config.ConfigManager;
 import net.tywrapstudios.blossombridge.api.logging.LoggingHandler;
@@ -17,8 +19,7 @@ import java.util.Objects;
 
 public class Constructra implements ModInitializer {
 	public static final String MOD_ID = "constructra";
-	public static final ConfigManager<ConstructraConfig> CONFIG_MANAGER = new ConfigManager<>(ConstructraConfig.class, new File(FabricLoader.getInstance().getConfigDir().toFile(), "constructra.json5"));
-	public static ConstructraConfig config() {return CONFIG_MANAGER.getConfig();}
+	private static final ConfigManager<ConstructraConfig> CONFIG_MANAGER = new ConfigManager<>(ConstructraConfig.class, new File(FabricLoader.getInstance().getConfigDir().toFile(), "constructra.json5"));
 	public static final LoggingHandler<ConstructraConfig> LOGGER = new LoggingHandler<>("Constructra", CONFIG_MANAGER);
 
 	@Override
@@ -39,5 +40,15 @@ public class Constructra implements ModInitializer {
 
 	public static Identifier id(String P) {
 		return Identifier.of(MOD_ID, P);
+	}
+
+	public static ConstructraConfig config() {
+		return CONFIG_MANAGER.getConfig();
+	}
+
+	public static void reloadConfigForCommand(CommandContext<ServerCommandSource> ctx) {
+		assert ctx != null;
+
+		CONFIG_MANAGER.loadConfig();
 	}
 }

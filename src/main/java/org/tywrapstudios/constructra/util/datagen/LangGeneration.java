@@ -30,6 +30,8 @@ public class LangGeneration extends FabricLanguageProvider {
         translationBuilder.add("tag.item.constructra.industrial_fuels", "Industrial Fuels");
         translationBuilder.add("tag.item.constructra.biological_fuels", "Biological Fuels");
         translationBuilder.add("tag.item.constructra.crafting_components", "Component Items");
+        translationBuilder.add("tag.item.constructra.resource_harvestable", "Harvestable");
+        translationBuilder.add("tag.block.constructra.resource_harvestable", "Harvestable");
         translationBuilder.add(ComponentItems.Group.INSTANCE.langEntry, "Constructra - Components");
         translationBuilder.add(FuelItems.Group.INSTANCE.langEntry, "Constructra - Fuels");
         translationBuilder.add("purity.none", "None");
@@ -38,7 +40,6 @@ public class LangGeneration extends FabricLanguageProvider {
         translationBuilder.add("purity.pure", "Pure");
         translationBuilder.add("resource.minecraft.iron", "Iron");
         translationBuilder.add("resource.minecraft.gold", "Gold");
-        translationBuilder.add("resource.constructra.empty", "Empty");
         translationBuilder.add("text.constructra.prompt.mining_instruction", "Hold %s to start mining");
         translationBuilder.add("text.constructra.prompt.mining_instruction_obstructed", "Hold %s to start mining ");
         translationBuilder.add("text.constructra.info.obstructed", "(Obstructed)");
@@ -56,7 +57,7 @@ public class LangGeneration extends FabricLanguageProvider {
         translationBuilder.add("text.constructra.command.purge_start", "Starting Node Purge with range %s...");
         translationBuilder.add("text.constructra.command.purge", "Found and removed Node of type [%s] at [%s].");
         translationBuilder.add("text.constructra.command.purge_end_empty", "No Nodes were purged. Perhaps try a larger <range>?");
-        translationBuilder.add("text.constructra.command.purge_end_inefficient", "The amount of Purged Nodes equalled the initial amount of Nodes in the world. For a more efficient Full Node Removal, consider using /[ca||constructra] nodes flush.");
+        translationBuilder.add("text.constructra.command.purge_end_inefficient", "The amount of Purged Nodes equalled the initial amount of Nodes in the world.\nFor a more efficient Full Node Removal, consider using nodes flush.");
         translationBuilder.add("text.constructra.command.purge_end", "End of Node Purge. Purged %s/%s Nodes in World. (%s left)");
     }
 

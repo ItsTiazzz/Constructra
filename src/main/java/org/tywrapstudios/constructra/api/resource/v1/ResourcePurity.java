@@ -7,6 +7,8 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.function.ValueLists;
+import org.tywrapstudios.constructra.Constructra;
+import org.tywrapstudios.constructra.config.ConstructraConfig;
 
 import java.util.Random;
 import java.util.function.IntFunction;
@@ -73,11 +75,14 @@ public enum ResourcePurity implements StringIdentifiable {
     }
 
     public float getMiningTimeMultiplier() {
+        ConstructraConfig.ResourceConfig.PurityModifiers cc = Constructra.config().resources.purity_modifiers;
+        if (!cc.does_purity_affect_rate) return cc.normal;
+
         return switch (this) {
-            case PURE -> 0.5f;
-            case NORMAL -> 1.0f;
-            case IMPURE -> 1.5f;
-            case NONE -> 2.0f;
+            case PURE -> cc.pure;
+            case NORMAL -> cc.normal;
+            case IMPURE -> cc.impure;
+            case NONE -> 0.0f;
         };
     }
 

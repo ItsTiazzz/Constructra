@@ -32,6 +32,7 @@ public class ResourceNodesState extends PersistentState {
             nodeNbt.putString("resource", node.getResource().getIdentifier().toString());
             nodeNbt.putInt("purity", node.getPurity().getIndex());
             nodeNbt.putBoolean("obstructed", node.isObstructed());
+            nodeNbt.putInt("total_harvests", node.getTotalHarvests());
             nodesList.add(nodeNbt);
         }
         nbt.put("nodes", nodesList);
@@ -52,8 +53,9 @@ public class ResourceNodesState extends PersistentState {
             ResourcePurity purity = ResourcePurity.indexed(nodeNbt.getInt("purity"));
             Resource resource = CaRegistries.RESOURCE.get(Identifier.of(nodeNbt.getString("resource")));
             boolean obstructed = nodeNbt.getBoolean("obstructed");
+            int totalHarvests = nodeNbt.getInt("total_harvests");
 
-            ResourceNode<?> node = new ResourceNode<>(resource, purity, pos, obstructed);
+            ResourceNode<?> node = new ResourceNode<>(resource, purity, pos, obstructed, totalHarvests);
             state.nodes.add(node);
         }
         return state;

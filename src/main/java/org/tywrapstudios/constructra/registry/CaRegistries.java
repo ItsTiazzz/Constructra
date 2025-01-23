@@ -6,10 +6,10 @@ import org.tywrapstudios.constructra.Constructra;
 import org.tywrapstudios.constructra.api.resource.v1.Resource;
 
 public class CaRegistries {
-    public static final DefaultedRegistry<Resource> RESOURCE;
+    public static final Registry<Resource> RESOURCE;
 
     static {
-        RESOURCE = FabricRegistryBuilder.createDefaulted(Keys.RESOURCE,Constructra.id("empty")).buildAndRegister();
+        RESOURCE = FabricRegistryBuilder.createSimple(Keys.RESOURCE).buildAndRegister();
     }
 
     public static class Keys {

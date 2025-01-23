@@ -5,11 +5,16 @@ import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.Block;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import org.tywrapstudios.constructra.Constructra;
+import org.tywrapstudios.constructra.api.resource.v1.harvesting.ResourceHarvestTracker;
+import org.tywrapstudios.constructra.network.payload.HarvestEndEventC2SPayload;
+import org.tywrapstudios.constructra.network.payload.HarvestStartEventC2SPayload;
 import org.tywrapstudios.constructra.network.payload.NodeQueryC2SPayload;
 import org.tywrapstudios.constructra.network.payload.NodeQueryS2CPayload;
 
@@ -69,11 +74,11 @@ public class ResourceManager {
             return false;
         }
 
-        public static List<ResourceNode<?>> purge(BlockPos centre, int range, ServerWorld world) {
-            return purge(centre, range, world, null);
+        public static List<ResourceNode<?>> purge(BlockPos centre, int range, boolean destroyBlock, ServerWorld world) {
+            return purge(centre, range, destroyBlock, world, null);
         }
 
-        public static List<ResourceNode<?>> purge(BlockPos centre, int range, ServerWorld world, @Nullable Consumer<ResourceNode<?>> runWhenFound) {
+        public static List<ResourceNode<?>> purge(BlockPos centre, int range, boolean destroyBlock, ServerWorld world, @Nullable Consumer<ResourceNode<?>> runWhenFound) {
             ResourceNodesState state = getOrCreateState(world);
             List<ResourceNode<?>> purgedNodes = new ArrayList<>();
             Constructra.LOGGER.info("Attempting purge at: " + centre + " with range " + range);
@@ -84,6 +89,7 @@ public class ResourceManager {
                 if (isWithinDistance) {
                     REMOVAL.add(node);
                     purgedNodes.add(node);
+                    if (destroyBlock) world.breakBlock(node.getCentre(), false);
                     if (runWhenFound != null) runWhenFound.accept(node);
                     Constructra.LOGGER.warn("Marked ResourceNode for removal at " + node.getCentre());
                 }
@@ -98,7 +104,14 @@ public class ResourceManager {
 
         public static void flush(String reason, ServerWorld world) {
             ResourceNodesState state = getOrCreateState(world);
-            state.getNodes().clear();
+            for (ResourceNode<?> node : state.getNodes()) {
+                world.breakBlock(node.getCentre(), false);
+                state.getNodes().remove(node);
+            }
+            if (!state.getNodes().isEmpty()) {
+                state.getNodes().clear();
+                Constructra.LOGGER.error("The NodesState still had Nodes inside it even though we flushed through all of them, this should not happen.");
+            }
             Constructra.LOGGER.warn("Flushed all resource nodes: " + reason);
         }
 
@@ -139,15 +152,26 @@ public class ResourceManager {
 
         public static void initializeServer() {
             ServerTickEvents.END_WORLD_TICK.register(ResourceManager.Nodes::tick);
+            ServerTickEvents.START_SERVER_TICK.register(ResourceHarvestTracker::tick);
 
             PayloadTypeRegistry.playC2S().register(NodeQueryC2SPayload.ID, NodeQueryC2SPayload.CODEC);
             PayloadTypeRegistry.playS2C().register(NodeQueryS2CPayload.ID, NodeQueryS2CPayload.CODEC);
+            PayloadTypeRegistry.playC2S().register(HarvestStartEventC2SPayload.ID, HarvestStartEventC2SPayload.CODEC);
+            PayloadTypeRegistry.playC2S().register(HarvestEndEventC2SPayload.ID, HarvestEndEventC2SPayload.CODEC);
+
             ServerPlayNetworking.registerGlobalReceiver(NodeQueryC2SPayload.ID, (load, ctx) -> {
                 ResourceNode<?> node = ResourceManager.Nodes.getAtPos(load.pos(), ctx.server().getOverworld());
                 if (node != null) {
                     ServerPlayNetworking.send(ctx.player(), new NodeQueryS2CPayload(node));
                 }
             });
+
+            ServerPlayNetworking.registerGlobalReceiver(HarvestStartEventC2SPayload.ID, (load, ctx) -> {
+                ctx.server().execute(() -> ResourceHarvestTracker.startHarvesting(ctx.player(), load.pos()));
+            });
+
+            ServerPlayNetworking.registerGlobalReceiver(HarvestEndEventC2SPayload.ID, (load, ctx) -> ctx.server()
+                    .execute(() -> ResourceHarvestTracker.stopHarvesting(ctx.player())));
         }
     }
 }

@@ -9,13 +9,9 @@ class WorkFlow {
      */
 
     /*
-        STYLE RULES:
         NEXATEK -> Company.
         WICKED (Waste Inspection and Coordination for Kinetic Evaluation and Deployment) -> Changing waste into currency.
         Terbysium -> Special Alloy only found in the asteroid belt.
-        SAM -?
-        Somersloop -?
-        Mercer -?
         DART (Directly Artificial Research Tree) -> Research Tree.
         CASU (Controlled Amplified Shock Unit) -> Shock based weapon.
         Electronic Boomstick -> Stronger version of the CASU.
@@ -27,19 +23,29 @@ class WorkFlow {
        TODO LIST
         - Think about whether I want to completely change the base game or actually keep some functionality.
           (Like disabling certain items, or bigger such as the health system)
-          - Getting rid of a lot of recipes might be a good idea.
+            - Getting rid of a lot of recipes might be a good idea.
+        - Further implementing the Resource System, now with actual harvesting
+            - Harvesting will be done in the following way:
+            1. The user finds a [Randomly Generated] ResourceNode with a Resource set to it (e.g. Iron)
+            2. The user can hold down the attack button (Left Click) to start "harvesting".
+            3. Every so often, the Node spews out a piece of the Resource's retrievableItem.
+                - This time frame is directly modified by the ResourcePurity
+            4. If the Node was obstructed, the third time the node gets harvested from, it will de-obstruct.
+            5. After Nodes are not obstructed anymore (Porta-)Miners can be used to harvest from the Node automatically.
+            Current Problems:
+            - Vanilla Blocks do not have a pretty way of making them a Resource.
+                - We Might have to resort to fully disabling them in general, which falls back to the first point.
+            - I have yet to implement Random Generation.
      */
 
     // Items
     /* TODO: ALL ITEMS TO ADD
         A
-        Adaptive Control Unit
         AI Expansion Server
         Alien DNA Capsule
         Alien Power Matrix
         Alien Protein
         Alien Remains
-        Assembly Director System
         B
         Bacon Agaric
         Ballistic Warp Drive
@@ -49,9 +55,7 @@ class WorkFlow {
         Biochemical Sculptor
         Boom Box
         C
-        Terbysium Ore
         Color Cartridge
-        Copper Ore
         Cup
         D
         Dark Matter Crystal
@@ -59,39 +63,30 @@ class WorkFlow {
         E
         Electromagnetic Control Rod
         F
-        Fabric
-        NEXATEK Coupon
-        Nexite Ingot
-        Nexite Triangle
-        Nexonium
         Flower Petals
         H
         Hard Drive
-        High-Speed Connector
-        I
-        Iron Ore
         L
         Limestone
         M
         Magnetic Field Generator
         Medicinal Inhaler
-        Mercer Sphere
         Miner
         N
         Neural-Quantum Processor
+        NEXATEK Coupon
+        Nexite Ingot
+        Nexite Triangle
+        Nexonium
         P
         Paleberry
         Power Shard
         Power Slug
         R
         Raw Quartz
-        Reanimated SAM -> reimplement
         S
-        SAM  -> reimplement
-        SAM Fluctuator  -> reimplement
         Singularity Cell
         Smokeless Powder
-        Somersloop -> reimplement
         Statues
         Sulfur
         T
