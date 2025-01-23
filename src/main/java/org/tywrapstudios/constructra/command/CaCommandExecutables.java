@@ -24,7 +24,7 @@ public class CaCommandExecutables {
     protected static int reload (CommandContext<ServerCommandSource> ctx) {
         ServerCommandSource source = ctx.getSource();
         source.sendFeedback(() -> Text.translatable("commands.reload.success"), true);
-        Constructra.CONFIG_MANAGER.loadConfig();
+        Constructra.reloadConfigForCommand(ctx);
         return 1;
     }
 
@@ -35,13 +35,14 @@ public class CaCommandExecutables {
         return 1;
     }
 
-    protected static int purgeNode(CommandContext<ServerCommandSource> ctx, boolean hasRange) throws CommandSyntaxException {
+    protected static int purgeNode(CommandContext<ServerCommandSource> ctx, boolean hasRange, boolean hasBlockBool) throws CommandSyntaxException {
         BlockPos pos = BlockPosArgumentType.getLoadedBlockPos(ctx,"pos");
         int range = hasRange ? IntegerArgumentType.getInteger(ctx,"range") : 1;
+        boolean destroy = hasBlockBool ? BoolArgumentType.getBool(ctx, "destroy_blocks") : false;
         ServerCommandSource source = ctx.getSource();
         int initialNodeListSize = ResourceManager.Nodes.getOrCreateState(source.getWorld()).getNodes().size();
         source.sendFeedback(() -> Text.translatable("text.constructra.command.purge_start", range).formatted(Formatting.GREEN), true);
-        List<ResourceNode<?>> purgedNodes = ResourceManager.Nodes.purge(pos, range, source.getWorld(), resourceNode -> source.sendFeedback(() -> Text.translatable("text.constructra.command.purge", resourceNode.getResource().getName(), pos.toShortString()).formatted(Formatting.RED), true));
+        List<ResourceNode<?>> purgedNodes = ResourceManager.Nodes.purge(pos, range, destroy, source.getWorld(), resourceNode -> source.sendFeedback(() -> Text.translatable("text.constructra.command.purge", resourceNode.getResource().getName(), resourceNode.getCentre().toShortString()).formatted(Formatting.RED), true));
         MutableText endText = purgedNodes.isEmpty() ? Text.translatable("text.constructra.command.purge_end_empty") : purgedNodes.size() == initialNodeListSize ? Text.translatable("text.constructra.command.purge_end_inefficient", purgedNodes.size()) : Text.translatable("text.constructra.command.purge_end", purgedNodes.size(), initialNodeListSize, initialNodeListSize - purgedNodes.size());
         source.sendFeedback(() -> endText.formatted(Formatting.GREEN), true);
         return 1;

@@ -51,30 +51,44 @@ public class CaCommandImpl {
 
         var posArg2 = CommandManager
                 .argument("pos", BlockPosArgumentType.blockPos())
-                .executes(ctx -> CaCommandExecutables.purgeNode(ctx, false)).build();
+                .executes(ctx -> CaCommandExecutables.purgeNode(ctx, false, false)).build();
 
         var rangeArg = CommandManager
                 .argument("range", IntegerArgumentType.integer(0))
-                .executes(ctx -> CaCommandExecutables.purgeNode(ctx, true)).build();
+                .executes(ctx -> CaCommandExecutables.purgeNode(ctx, true, false)).build();
+
+        var removeBlockArg = CommandManager
+                .argument("destroy_blocks", BoolArgumentType.bool())
+                .executes(ctx -> CaCommandExecutables.purgeNode(ctx, true, true)).build();
+
+        var removeBlockNoRangeArg = CommandManager
+                .argument("destroy_blocks", BoolArgumentType.bool())
+                .executes(ctx -> CaCommandExecutables.purgeNode(ctx, false, true)).build();
 
         var reloadCommand = CommandManager
                 .literal("reload")
                 .requires(source -> source.hasPermissionLevel(cc.perm_lvl_reload))
                 .executes(CaCommandExecutables::reload).build();
 
+        /* Root Command */
         dispatcher.getRoot().addChild(constructraCommand);
         dispatcher.getRoot().addChild(caCommand);
-
-        constructraCommand.addChild(nodesCommand);
+        /* Reload Command */
         constructraCommand.addChild(reloadCommand);
-
+        /* Nodes Command */
+        constructraCommand.addChild(nodesCommand);
+        /* Nodes Flush */
         nodesCommand.addChild(flushCommand);
+        /* Nodes Spawn */
         nodesCommand.addChild(spawnCommand);
         spawnCommand.addChild(posArg);
         posArg.addChild(typeArg);
         typeArg.addChild(obsArg);
+        /* Nodes Purge */
         nodesCommand.addChild(purgeCommand);
         purgeCommand.addChild(posArg2);
         posArg2.addChild(rangeArg);
+        posArg2.addChild(removeBlockNoRangeArg);
+        rangeArg.addChild(removeBlockArg);
     }
 }
