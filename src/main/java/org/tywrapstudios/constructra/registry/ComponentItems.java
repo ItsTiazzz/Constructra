@@ -7,6 +7,7 @@ import net.minecraft.block.PillarBlock;
 import net.minecraft.item.*;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import org.tywrapstudios.constructra.Constructra;
 import org.tywrapstudios.constructra.api.block.v1.BeamTexturedBlock;
 import org.tywrapstudios.constructra.api.block.v1.FrameShapedBlock;
 import org.tywrapstudios.constructra.api.item.v1.EasyItemGroup;
@@ -233,7 +234,7 @@ public class ComponentItems {
 
     public static class Group extends EasyItemGroup {
         private Group() {
-            super("components", FABRIC, COMPONENT_ITEMS, BBlock.COMPONENT_BLOCKS, BBlock.COMPONENT_BLOCKS_NON_CUBE);
+            super(Constructra.id("components"), FABRIC, COMPONENT_ITEMS, BBlock.COMPONENT_BLOCKS, BBlock.COMPONENT_BLOCKS_NON_CUBE);
         }
 
         public static final Group INSTANCE = new Group();

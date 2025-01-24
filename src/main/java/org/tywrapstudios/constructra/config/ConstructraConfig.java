@@ -34,6 +34,7 @@ public class ConstructraConfig extends AbstractConfig {
             @Comment("""
                     Whether the Purity of a ResourceNode affects at which rate the resource is given.
                     If false is chosen, we will use the rate of a NORMAL node, so feel free to tweak that value.
+                    ResourceNodes will still have their Purity displayed!
                     Type: Boolean
                     Default: true""")
             public boolean does_purity_affect_rate = true;

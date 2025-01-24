@@ -3,6 +3,7 @@ package org.tywrapstudios.constructra.registry;
 import net.minecraft.item.*;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import org.tywrapstudios.constructra.Constructra;
 import org.tywrapstudios.constructra.api.item.v1.EasyItemGroup;
 
 import java.util.ArrayList;
@@ -90,7 +91,7 @@ public class FuelItems {
 
     public static class Group extends EasyItemGroup {
         Group() {
-            super("fuels", BIOMASS, FUEL_ITEMS);
+            super(Constructra.id("fuels"), BIOMASS, FUEL_ITEMS);
         }
 
         @Override
