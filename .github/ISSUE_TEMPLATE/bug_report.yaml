@@ -1,0 +1,42 @@
+name: Bug Report
+description: Create a report to help us improve and fix features.
+title: "[Bug]: "
+labels: ["type: bug"]
+body:
+  - type: textarea
+    attributes:
+      label: Description
+      description: A clear and concise description of the problem.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Reproduction
+      description: Provide steps to reproduce the problem.
+      placeholder: "
+      1. Go to [...]
+      2. Break block of type [...]
+      3. Place [...] on top of it
+      4. See [...] happen
+      "
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: Game Log
+      description: "
+      We'd love to see the game log for additional information about the bug.
+      It can be found in the \"logs\" folder of your Minecraft folder as \"latest.log\", if it's a crash go to \"crash-reports\" and just grab the latest one you can find.
+      You're better of pasting the file in https://mclo.gs/ and put the link here.
+      Posting the raw content here will make it hard to read, alongside give you the risk of sharing harmful data like IP Addresses.
+      "
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Additional Context
+      description: Provide any extra context about the problem. Like mods, Config settings, etc. that you think could be involved.
+      placeholder: I had [...] enabled when I was doing it, it might also be because of [...] because I installed that.
+  - type: markdown
+    attributes:
+      value: Thank you for taking the time to help improve the project!

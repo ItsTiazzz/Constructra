@@ -1,0 +1,35 @@
+name: Suggestion
+about: Suggest an idea for the project.
+title: "[Suggestion]: "
+labels: ["type: enhancement"]
+body:
+  - type: dropdown
+    attributes:
+      label: Is your feature request related to a problem?
+      options:
+        - Yes
+        - No
+        - Sometimes
+      default: 1
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Explain
+      description: Describe your problem, if you chose No, can be left empty.
+      placeholder: I'm always frustrated when [...] and it always makes me [...].
+  - type: textarea
+    attributes:
+      label: Solution or Suggestion
+      description: Describe the solution/suggestion you'd like to see.
+      placeholder: I'd love it if you'd [...] because it would efficiently impact [...]!
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Alternatives
+      description: Give a clear and concise description of any alternative solutions or features you've considered or used to fix your problem.
+      placeholder: Instead of manually doing [...], I just use [...] which automatically does it for me.
+  - type: markdown
+    attributes:
+      value: Thank you for taking the time to help improve the project!
