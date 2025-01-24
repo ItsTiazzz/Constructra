@@ -1,12 +1,11 @@
 package org.tywrapstudios.constructra.api.resource.v1;
 
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.Block;
 import net.minecraft.particle.ParticleTypes;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -22,15 +21,33 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+/**
+ * Class Related to everything that needs to be managed in terms of Resources.
+ */
 public class ResourceManager {
+    /**
+     * Inner class dedicated to specifically the network of {@link ResourceNode}{@code s}.
+     */
     public static class Nodes {
         private static final String STORAGE_ID = "resource_nodes";
         private static final List<ResourceNode<?>> REMOVAL = new ArrayList<>();
 
+        /**
+         * Get or create a {@link ResourceNodesState}, aka fetch all the nodes from the .dat file in {@code run/saves/WORLD/data}
+         * @param world the ServerWorld to fetch the State from.
+         * @return said {@link ResourceNodesState}.
+         */
         public static ResourceNodesState getOrCreateState(ServerWorld world) {
             return world.getPersistentStateManager().getOrCreate(ResourceNodesState.TYPE, STORAGE_ID);
         }
 
+        /**
+         * Adds a node to the network.
+         * @see #addNode(Resource, BlockPos, boolean, World)
+         * @see #addNode(Resource, BlockPos, World)
+         * @param node the Node to add.
+         * @param world the world to add it to, preferably a {@link ServerWorld}.
+         */
         public static void addNode(ResourceNode<?> node, World world) {
             if (world instanceof ServerWorld serverWorld) {
                 ResourceNodesState state = getOrCreateState(serverWorld);
@@ -50,6 +67,13 @@ public class ResourceManager {
             addNode(node, world);
         }
 
+        /**
+         * Checks if there is a Node at a position, and if so, returns it.
+         * @param pos the position to check for.
+         * @param world the {@link ServerWorld} to check in.
+         * @return if present, the {@link ResourceNode}.
+         */
+        @Nullable
         public static ResourceNode<?> getAtPos(BlockPos pos, ServerWorld world) {
             ResourceNodesState state = getOrCreateState(world);
             for (ResourceNode<?> node : state.getNodes()) {
@@ -64,6 +88,12 @@ public class ResourceManager {
             return getAtPos(new BlockPos(x, y, z), world);
         }
 
+        /**
+         * Checks whether a {@link BlockPos} is at a Node.
+         * @param pos the position to check for.
+         * @param world the {@link ServerWorld} to check in.
+         * @return whether there is a Node at the position. (boolean)
+         */
         public static boolean isInNode(BlockPos pos, ServerWorld world) {
             ResourceNodesState state = getOrCreateState(world);
             for (ResourceNode<?> node : state.getNodes()) {
@@ -74,10 +104,15 @@ public class ResourceManager {
             return false;
         }
 
-        public static List<ResourceNode<?>> purge(BlockPos centre, int range, boolean destroyBlock, ServerWorld world) {
-            return purge(centre, range, destroyBlock, world, null);
-        }
-
+        /**
+         * (Mass) Remove Nodes from the network.
+         * @param centre the centre of where we should start searching
+         * @param range the range of the search, in blocks.
+         * @param destroyBlock whether we should also destroy the block inside the Node.
+         * @param world the {@link ServerWorld} to check in.
+         * @param runWhenFound this allows you to run a certain method every time a Node is found and removed. Can be null in order to not do anything.
+         * @return a list of all the Nodes purged.
+         */
         public static List<ResourceNode<?>> purge(BlockPos centre, int range, boolean destroyBlock, ServerWorld world, @Nullable Consumer<ResourceNode<?>> runWhenFound) {
             ResourceNodesState state = getOrCreateState(world);
             List<ResourceNode<?>> purgedNodes = new ArrayList<>();
@@ -98,10 +133,15 @@ public class ResourceManager {
             return purgedNodes;
         }
 
-        public static void flush(ServerWorld world) {
-            flush("Unknown reason", world);
+        public static List<ResourceNode<?>> purge(BlockPos centre, int range, boolean destroyBlock, ServerWorld world) {
+            return purge(centre, range, destroyBlock, world, null);
         }
 
+        /**
+         * Remove ALL The Nodes from the network.
+         * @param reason the reason why you're doing this.
+         * @param world the {@link ServerWorld} to check in.
+         */
         public static void flush(String reason, ServerWorld world) {
             ResourceNodesState state = getOrCreateState(world);
             for (ResourceNode<?> node : state.getNodes()) {
@@ -115,7 +155,11 @@ public class ResourceManager {
             Constructra.LOGGER.warn("Flushed all resource nodes: " + reason);
         }
 
-        public static void tick(ServerWorld serverWorld) {
+        public static void flush(ServerWorld world) {
+            flush("Unknown reason", world);
+        }
+
+        private static void tick(ServerWorld serverWorld) {
             ResourceNodesState state = getOrCreateState(serverWorld);
 
             for (ResourceNode<?> node : state.getNodes()) {
@@ -153,6 +197,12 @@ public class ResourceManager {
         public static void initializeServer() {
             ServerTickEvents.END_WORLD_TICK.register(ResourceManager.Nodes::tick);
             ServerTickEvents.START_SERVER_TICK.register(ResourceHarvestTracker::tick);
+            PlayerBlockBreakEvents.BEFORE.register((world, playerEntity, blockPos, blockState, blockEntity) -> {
+                if (world instanceof ServerWorld serverWorld) {
+                    return !isInNode(blockPos, serverWorld);
+                }
+                return true;
+            });
 
             PayloadTypeRegistry.playC2S().register(NodeQueryC2SPayload.ID, NodeQueryC2SPayload.CODEC);
             PayloadTypeRegistry.playS2C().register(NodeQueryS2CPayload.ID, NodeQueryS2CPayload.CODEC);

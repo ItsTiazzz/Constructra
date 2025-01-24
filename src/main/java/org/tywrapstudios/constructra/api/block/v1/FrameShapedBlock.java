@@ -11,6 +11,9 @@ import net.minecraft.world.BlockView;
 
 import java.util.stream.Stream;
 
+/**
+ * A block used for any Frame Shaped block, has a set {@link VoxelShape}, so make sure the model adapts to it.
+ */
 public class FrameShapedBlock extends Block {
     private static final VoxelShape SHAPE = Stream.of(
             Block.createCuboidShape(0, 0, 0, 2, 2, 16),

@@ -5,6 +5,9 @@ import net.minecraft.item.ItemConvertible;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
+/**
+ * General interface for a Resource.
+ */
 public interface Resource {
     Identifier getIdentifier();
     ItemConvertible getRetrievableItem();

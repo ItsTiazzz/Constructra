@@ -10,6 +10,13 @@ public class ImplementedResource implements Resource {
     private final ResourceRarity rarity;
     private final Block harvestBlock;
 
+    /**
+     * Constructs a new ImplementedResource, there is also the option of extending this class or implementing {@link Resource} to create your own Resource class.
+     * @param retrievableItem the item that will be harvested from this Resource.
+     * @param rarity the rarity of this type of Resource.
+     * @param harvestBlock the block that the Resource will place in the world to be harvested from.
+     * @param identifier the {@link Identifier} of this Resource, can be used upon Registry.
+     */
     public ImplementedResource(ItemConvertible retrievableItem, ResourceRarity rarity, Block harvestBlock, Identifier identifier) {
         this.identifier = identifier;
         this.retrievableItem = retrievableItem;

@@ -14,6 +14,9 @@ import java.util.Random;
 import java.util.function.IntFunction;
 import java.util.function.ToIntFunction;
 
+/**
+ * {@link ResourceNode}{@code s} can have a Purity, which directly inflicts at which rate Resources can be Harvested from the Node. These are the options.
+ */
 public enum ResourcePurity implements StringIdentifiable {
     NONE(0, "none", Formatting.RED),
     IMPURE(1, "impure", Formatting.DARK_AQUA),
@@ -41,6 +44,10 @@ public enum ResourcePurity implements StringIdentifiable {
         return this.index;
     }
 
+    /**
+     * @param index the index int of the Purity.
+     * @return the purity of the corresponding index, returns NONE by default.
+     */
     public static ResourcePurity indexed(int index) {
         return switch (index) {
             case 1 -> ResourcePurity.IMPURE;
@@ -50,6 +57,11 @@ public enum ResourcePurity implements StringIdentifiable {
         };
     }
 
+    /**
+     * @param random the {@link Random} to work with when generating the int.
+     * @return a Randomly chosen purity, handy for Random Generation.
+     * @see #random()
+     */
     public static ResourcePurity random(Random random) {
         int i = random.nextInt(3);
         return switch (i) {
@@ -64,6 +76,12 @@ public enum ResourcePurity implements StringIdentifiable {
         return random(new Random());
     }
 
+    /**
+     * Similar to {@link #indexed(int)}, returns a Purity from their name.
+     * <p> {@code "RANDOM"} can also be chosen to just return a Random Purity.
+     * @param string the name of the purity.
+     * @return the purity of the corresponding name, returns NONE by default.
+     */
     public static ResourcePurity fromString(String string) {
         return switch (string) {
             case "IMPURE" -> IMPURE;
@@ -74,6 +92,9 @@ public enum ResourcePurity implements StringIdentifiable {
         };
     }
 
+    /**
+     * @return the modifier for harvesting time per purity, specified in the Config.
+     */
     public float getMiningTimeMultiplier() {
         ConstructraConfig.ResourceConfig.PurityModifiers cc = Constructra.config().resources.purity_modifiers;
         if (!cc.does_purity_affect_rate) return cc.normal;
@@ -86,6 +107,9 @@ public enum ResourcePurity implements StringIdentifiable {
         };
     }
 
+    /**
+     * @return a {@link Text} element that is gotten from a translatable String: {@code "purity.name"}
+     */
     public Text toText() {
         return Text.translatable("purity." + asString()).formatted(formatting);
     }

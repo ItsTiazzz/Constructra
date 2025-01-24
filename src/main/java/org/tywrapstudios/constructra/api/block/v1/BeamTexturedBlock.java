@@ -8,6 +8,9 @@ import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
 import net.minecraft.util.math.Direction;
 
+/**
+ * A block used for the steel beam, but can be used for lookalikes.
+ */
 public class BeamTexturedBlock extends HorizontalFacingBlock {
     public static final MapCodec<BeamTexturedBlock> CODEC = createCodec(BeamTexturedBlock::new);
 

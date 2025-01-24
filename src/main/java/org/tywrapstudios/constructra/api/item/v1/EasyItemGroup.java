@@ -9,6 +9,7 @@ import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -23,16 +24,25 @@ public abstract class EasyItemGroup {
     protected final List<ItemConvertible> ENTRIES = new ArrayList<>();
     private ItemConvertible ICON;
 
+    /**
+     * Extend this class to make a simple item group.
+     * @param id the {@link Identifier} of the group.
+     * @param icon the item that will serve as the icon of the group.
+     * @param items a list of Items to add to the group, must be {@link NotNull}
+     */
     @SafeVarargs
-    protected EasyItemGroup(String name, ItemConvertible icon, @NotNull List<? extends ItemConvertible>... items) {
-        id = name;
+    protected EasyItemGroup(Identifier id, ItemConvertible icon, @NotNull List<? extends ItemConvertible>... items) {
+        this.id = id.getPath();
         for (List<? extends ItemConvertible> item : items) {
-            ENTRIES.addAll(item);
+            this.ENTRIES.addAll(item);
         }
-        langEntry = "itemGroup.constructra." + id;
-        ICON = icon;
+        this.langEntry = String.format("itemGroup.%s.%s", id.getNamespace(), id.getPath());
+        this.ICON = icon;
     }
 
+    /**
+     * The actual GROUP object that will be registered using {@code register()}
+     */
     private final Supplier<ItemGroup> GROUP = () -> FabricItemGroup.builder()
             .displayName(Text.translatable(langEntry))
             .icon(() -> new ItemStack(ICON))
@@ -43,12 +53,11 @@ public abstract class EasyItemGroup {
             })
             .build();
 
-    private RegistryKey<ItemGroup> key() {
-        return RegistryKey.of(RegistryKeys.ITEM_GROUP, id(id));
-    }
-
+    /**
+     * The method used to register the group.
+     */
     public void register() {
-        Registry.register(Registries.ITEM_GROUP, key(), GROUP.get());
+        Registry.register(Registries.ITEM_GROUP, RegistryKey.of(RegistryKeys.ITEM_GROUP, id(id)), get());
     }
 
     public ItemGroup get() {
