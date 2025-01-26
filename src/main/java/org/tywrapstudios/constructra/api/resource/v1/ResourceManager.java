@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.Block;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -199,6 +200,9 @@ public class ResourceManager {
             ServerTickEvents.START_SERVER_TICK.register(ResourceHarvestTracker::tick);
             PlayerBlockBreakEvents.BEFORE.register((world, playerEntity, blockPos, blockState, blockEntity) -> {
                 if (world instanceof ServerWorld serverWorld) {
+                    if (playerEntity.isCreative()) {
+                        return true;
+                    }
                     return !isInNode(blockPos, serverWorld);
                 }
                 return true;

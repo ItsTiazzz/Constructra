@@ -25,8 +25,9 @@ public class ResourceNode<T extends Resource> {
             ResourcePurity purity = ResourcePurity.PACKET_CODEC.decode(buf);
             BlockPos pos = packetBuf.readBlockPos();
             boolean obstructed = packetBuf.readBoolean();
+            int totalHarvests = packetBuf.readInt();
 
-            return new ResourceNode<>(resource, purity, pos, obstructed);
+            return new ResourceNode<>(resource, purity, pos, obstructed, totalHarvests);
         }
 
         @Override
@@ -36,6 +37,7 @@ public class ResourceNode<T extends Resource> {
             ResourcePurity.PACKET_CODEC.encode(buf, value.getPurity());
             packetBuf.writeBlockPos(value.getCentre());
             packetBuf.writeBoolean(value.isObstructed());
+            packetBuf.writeInt(value.getTotalHarvests());
         }
     };
 
