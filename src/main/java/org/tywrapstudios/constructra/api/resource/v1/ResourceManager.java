@@ -6,7 +6,6 @@ import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.Block;
 import net.minecraft.particle.ParticleTypes;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -30,7 +29,6 @@ public class ResourceManager {
      * Inner class dedicated to specifically the network of {@link ResourceNode}{@code s}.
      */
     public static class Nodes {
-        private static final String STORAGE_ID = "resource_nodes";
         private static final List<ResourceNode<?>> REMOVAL = new ArrayList<>();
 
         /**
@@ -39,7 +37,7 @@ public class ResourceManager {
          * @return said {@link ResourceNodesState}.
          */
         public static ResourceNodesState getOrCreateState(ServerWorld world) {
-            return world.getPersistentStateManager().getOrCreate(ResourceNodesState.TYPE, STORAGE_ID);
+            return world.getPersistentStateManager().getOrCreate(ResourceNodesState.TYPE, ResourceNodesState.STORAGE_ID);
         }
 
         /**

@@ -15,6 +15,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class ResourceNodesState extends PersistentState {
     private final List<ResourceNode<?>> nodes = new CopyOnWriteArrayList<>();
     public static final Type<ResourceNodesState> TYPE = new Type<>(ResourceNodesState::new, (nbt, wrapper) -> createFromNbt(nbt), null);
+    public static final String STORAGE_ID = "resource_nodes";
 
     public ResourceNodesState() {
         super();
