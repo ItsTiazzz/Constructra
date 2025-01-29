@@ -20,13 +20,11 @@ public class LangGeneration extends FabricLanguageProvider {
     @Override
     public void generateTranslations(RegistryWrapper.WrapperLookup wrapperLookup, TranslationBuilder translationBuilder) {
         for (ItemConvertible item : MainRegistry.ALL_ITEM_CONVERTIBLE_CONTENT) {
-            if (item.equals(ComponentItems.BBlock.AI_LIMITER)) {
-                translationBuilder.add((Block) item, "AI Limiter");
-                continue;
-            }
+            if (item.equals(ComponentItems.BBlock.AI_LIMITER)) continue;
             autoGenerateName(translationBuilder, item);
         }
 
+        translationBuilder.add(ComponentItems.BBlock.AI_LIMITER, "AI Limiter");
         translationBuilder.add("tag.item.constructra.industrial_fuels", "Industrial Fuels");
         translationBuilder.add("tag.item.constructra.biological_fuels", "Biological Fuels");
         translationBuilder.add("tag.item.constructra.crafting_components", "Component Items");
