@@ -11,7 +11,7 @@ This mod aims to add a more streamlined gameflow of building _your_ future. No m
 ## Config
 If you happen to be stuck, or don't like a particular part of the gameflow, you are probably happy to hear this mod is highly configurable:
 ```json5
-insert config here
+// Will put here post release 
 ```
 > [!NOTE]  
 > This can be found in `run/config/constructra.json5`
