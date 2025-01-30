@@ -28,6 +28,7 @@ public class ResourceNodeHudRenderer {
         if (node.isObstructed()) {
             miningPrompt = Text.translatable("text.constructra.prompt.mining_instruction_obstructed", client.options.attackKey.getBoundKeyLocalizedText().getString())
                     .formatted(Formatting.GOLD)
+                    .append(" ")
                     .append(Text.translatable("text.constructra.info.obstructed").formatted(Formatting.DARK_RED));
         }
 

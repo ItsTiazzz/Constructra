@@ -2,7 +2,6 @@ package org.tywrapstudios.constructra.util.datagen;
 
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
-import net.minecraft.block.Block;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.registry.RegistryWrapper;
 import org.tywrapstudios.constructra.Constructra;
@@ -39,7 +38,6 @@ public class LangGeneration extends FabricLanguageProvider {
         translationBuilder.add("resource.minecraft.iron", "Iron");
         translationBuilder.add("resource.minecraft.gold", "Gold");
         translationBuilder.add("text.constructra.prompt.mining_instruction", "Hold %s to start mining");
-        translationBuilder.add("text.constructra.prompt.mining_instruction_obstructed", "Hold %s to start mining ");
         translationBuilder.add("text.constructra.info.obstructed", "(Obstructed)");
         translationBuilder.add("text.constructra.command.constructra",
                 """
