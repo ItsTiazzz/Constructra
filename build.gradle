@@ -28,7 +28,7 @@ fabricApi {
 dependencies {
 	// To change the versions see the gradle.properties file
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+
 //	mappings loom.layered {
 //		mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
 //		mappings file(".dev/sigmappings.tiny")
@@ -36,12 +36,18 @@ dependencies {
 
 	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
 
-	// Fabric API.
+	// Fabric
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+	testImplementation "net.fabricmc:fabric-loader-junit:${project.loader_version}"
 	// Jankson
 	implementation include("blue.endless:jankson:${project.jankson_version}")
 	// BlossomBridge
 	modImplementation "com.github.Tywrap-Studios:BlossomBridge:${project.blossombridge_version}"
+}
+
+test {
+	useJUnitPlatform()
 }
 
 processResources {
