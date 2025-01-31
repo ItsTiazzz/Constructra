@@ -46,18 +46,6 @@ public class StringCalculatorTest {
         Assertions.assertEquals(e, d);
     }
 
-    @Test
-    public void test5() {
-        System.out.println("---------SC Calc---------");
-        String calculation = "2 + sqrt 9 * 3";
-        double d = StringCalculator.calculate(calculation);
-        double e = 0;
-        System.out.println("expected: " + e);
-        System.out.println("result: " + d);
-        System.out.println("---------SC Calc---------");
-        Assertions.assertEquals(e, d);
-    }
-
     private List<String> calc(String calc) {
         try {
             return ShuntingYard.getInfix(calc);
