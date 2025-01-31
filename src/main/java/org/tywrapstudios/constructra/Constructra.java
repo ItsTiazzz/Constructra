@@ -46,9 +46,7 @@ public class Constructra implements ModInitializer {
 		return CONFIG_MANAGER.getConfig();
 	}
 
-	public static void reloadConfigForCommand(CommandContext<ServerCommandSource> ctx) {
-		assert ctx != null;
-
+	public static void reloadConfig() {
 		CONFIG_MANAGER.loadConfig();
 	}
 }

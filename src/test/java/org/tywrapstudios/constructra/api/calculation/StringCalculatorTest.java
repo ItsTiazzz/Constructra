@@ -1,13 +1,19 @@
 package org.tywrapstudios.constructra.api.calculation;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.tywrapstudios.constructra.Constructra;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
 public class StringCalculatorTest {
-    private static final Stack<String> CACHE = new Stack<>();
+    @BeforeAll
+    static void setup() {
+        Constructra.reloadConfig();
+    }
 
     @Test
     public void test1() {
@@ -54,35 +60,11 @@ public class StringCalculatorTest {
     }
 
     private List<String> calc(String calc) {
-        calc = calc
-                .replaceAll(" ", "")
-                .replaceAll(",", ".");
-        StringCalculator.CalculationBuilder builder = new StringCalculator.CalculationBuilder();
-        List<String> tokens = new ArrayList<>();
-
-        for (char c : calc.toCharArray()) {
-            String s = String.valueOf(c);
-            if (s.matches("\\d|[.]")) {
-                CACHE.push(s);
-            } else {
-                StringBuilder stringBuilder = new StringBuilder();
-                for (int i = 0; i < CACHE.size(); i++) {
-                    stringBuilder.append(CACHE.remove(i));
-                }
-                String finalizedCachedToken = stringBuilder.toString();
-                if (!finalizedCachedToken.isEmpty()) tokens.add(finalizedCachedToken);
-                tokens.add(s);
-            }
+        try {
+            return ShuntingYard.getInfix(calc);
+        } catch (Exception e){
+            System.out.println(e.getMessage());
+            return new ArrayList<>();
         }
-
-        StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < CACHE.size(); i++) {
-            stringBuilder.append(CACHE.remove(i));
-        }
-        String finalizedLastToken = stringBuilder.toString();
-        if (!finalizedLastToken.isEmpty()) tokens.add(finalizedLastToken);
-
-        System.out.println("Tokens: " + tokens);
-        return tokens;
     }
 }

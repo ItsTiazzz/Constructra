@@ -3,6 +3,7 @@ package org.tywrapstudios.constructra.command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
+import com.mojang.brigadier.arguments.StringArgumentType;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.command.argument.BlockPosArgumentType;
 import net.minecraft.command.argument.RegistryEntryReferenceArgumentType;
@@ -70,12 +71,19 @@ public class CaCommandImpl {
                 .requires(source -> source.hasPermissionLevel(cc.perm_lvl_reload))
                 .executes(CaCommandExecutables::reload).build();
 
-        /* Root Command */
+        var calcCommand = CommandManager
+                .literal("calc").build();
+
+        var calcStringArg = CommandManager
+                .argument("calculation", StringArgumentType.string())
+                .executes(CaCommandExecutables::calc).build();
+
+        /* Root */
         dispatcher.getRoot().addChild(constructraCommand);
         dispatcher.getRoot().addChild(caCommand);
-        /* Reload Command */
+        /* Reload */
         constructraCommand.addChild(reloadCommand);
-        /* Nodes Command */
+        /* Nodes */
         constructraCommand.addChild(nodesCommand);
         /* Nodes Flush */
         nodesCommand.addChild(flushCommand);
@@ -90,5 +98,8 @@ public class CaCommandImpl {
         posArg2.addChild(rangeArg);
         posArg2.addChild(removeBlockNoRangeArg);
         rangeArg.addChild(removeBlockArg);
+        /* Calc */
+        constructraCommand.addChild(calcCommand);
+        calcCommand.addChild(calcStringArg);
     }
 }

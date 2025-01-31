@@ -1,59 +1,30 @@
 package org.tywrapstudios.constructra.api.calculation;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.*;
-import java.util.regex.Pattern;
+
+import static java.lang.Double.NaN;
+import static org.tywrapstudios.constructra.Constructra.LOGGER;
 
 public class StringCalculator {
-    private static final Logger LOGGER = LoggerFactory.getLogger(StringCalculator.class);
-    private static final Pattern NON_DIGIT_OR_OPERATORS = Pattern.compile("");
-    private static final Stack<String> CACHE = new Stack<>();
-
-    public static double calculate(String calc) {
-        calc = calc
-                .replaceAll(" ", "")    // Ensure everything is next to each other
-                .replaceAll(",", ".");  // Ensure there are no "," decimal points, as Java will only recognise "."
-
+    public static double calculate(String calculation) {
         CalculationBuilder builder = new CalculationBuilder();
-        List<String> tokens = new ArrayList<>();
 
-        LOGGER.info("Checking calc: {}", calc);
+        try {
+            List<String> tokens = ShuntingYard.getInfix(calculation);
+            LOGGER.debug("[StringCalculator] Tokens: " + tokens);
+            List<String> postfixTokens = ShuntingYard.execute(tokens);
+            LOGGER.debug("[StringCalculator] Postfix: " + postfixTokens);
 
-        for (char c : calc.toCharArray()) {
-            String s = String.valueOf(c);
-            if (s.matches("\\d|[.]")) {
-                CACHE.push(s);
-                LOGGER.info("Pushed to cache: {}", s);
-            } else if (s.matches("[-+*/%^]")) {
-                StringBuilder cachedTokenBuilder = new StringBuilder();
-                for (int i = 0; i < CACHE.size() + i; i++) {
-                    cachedTokenBuilder.append(CACHE.removeFirst());
-                }
-                String finalizedCachedToken = cachedTokenBuilder.toString();
-                if (!finalizedCachedToken.isEmpty()) tokens.add(finalizedCachedToken);
-                LOGGER.info("finalizedCachedToken: {}", finalizedCachedToken);
-                tokens.add(s);
-                LOGGER.info("Add to tokens: {}", s);
-            } else {
-                CACHE.clear();
-                return 0;
-            }
+            return builder.fromPostfix(postfixTokens).build();
+        } catch (InvalidCalculationException e) {
+            LOGGER.error("[StringCalculator] Invalid Calculation: Could not get proper Infix Tokens from String: " + calculation);
+            e.printStackTrace();
+            return NaN;
+        } catch (Exception e) {
+            LOGGER.error("[StringCalculator] An unexpected Exception occurred while getting Infix Tokens for " + calculation);
+            e.printStackTrace();
+            return NaN;
         }
-
-        StringBuilder lastTokenBuilder = new StringBuilder();
-        for (int i = 0; i < CACHE.size() + i; i++) {
-            lastTokenBuilder.append(CACHE.removeFirst());
-        }
-        String finalizedLastToken = lastTokenBuilder.toString();
-        if (!finalizedLastToken.isEmpty()) tokens.add(finalizedLastToken);
-
-        LOGGER.info("Tokens: {}", tokens);
-        List<String> postfixTokens = ShuntingYard.execute(tokens);
-        LOGGER.info("Postfix: {}", postfixTokens);
-
-        return builder.fromPostfix(postfixTokens).build();
     }
 
     public static class CalculationBuilder {
@@ -61,7 +32,6 @@ public class StringCalculator {
         private static StringBuilder calcStringBuilder;
         private static double calcOutCome;
         private final static Map<String, Operator> OPS = new HashMap<>();
-        private static final Logger LOGGER = LoggerFactory.getLogger(CalculationBuilder.class);
 
         public CalculationBuilder() {
             calcStringBuilder = new StringBuilder();
@@ -69,20 +39,18 @@ public class StringCalculator {
         }
 
         public CalculationBuilder fromPostfix(List<String> postfix) {
-//            postfix.addFirst("0");
-//            postfix.addLast("+");
             Stack<String> N = new Stack<>();
             for (String s : postfix) {
-                LOGGER.info("Checking Token: {}", s);
+                LOGGER.debug("[StringCalculator$CalculationBuilder] Checking Token: " + s);
                 if (!OPS.containsKey(s)) {
                     N.push(s);
-                    LOGGER.info("Pushed: {}", s);
+                    LOGGER.debug("[StringCalculator$CalculationBuilder] Pushed: " + s);
                 } else {
                     Operator op = OPS.get(s);
                     double right = Double.parseDouble(N.pop());
                     double left = Double.parseDouble(N.pop());
                     double newD = getFromOperation(op, left, right);
-                    LOGGER.info("newD: {}", newD);
+                    LOGGER.debug("[StringCalculator$CalculationBuilder] newD: " + newD);
                     N.push(String.valueOf(newD));
                 }
             }
@@ -115,7 +83,7 @@ public class StringCalculator {
             for (double d : d1) {
                 calcOutCome = calcOutCome + d;
                 calcStringBuilder.append(String.format(" + %s", d));
-                LOGGER.info("Addition completed: {} {}", calcOutCome, calcStringBuilder.toString());
+                LOGGER.debug("[StringCalculator$CalculationBuilder] Addition completed: " + calcOutCome + " " + calcStringBuilder.toString());
             }
             return this;
         }
@@ -124,7 +92,7 @@ public class StringCalculator {
             for (double d : d1) {
                 calcOutCome = calcOutCome - d;
                 calcStringBuilder.append(String.format(" - %s", d));
-                LOGGER.info("Subtraction completed: {} {}", calcOutCome, calcStringBuilder.toString());
+                LOGGER.debug("[StringCalculator$CalculationBuilder] Subtraction completed: " + calcOutCome + " " + calcStringBuilder.toString());
             }
             return this;
         }
@@ -133,7 +101,7 @@ public class StringCalculator {
             for (double d : d1) {
                 calcOutCome = calcOutCome * d;
                 calcStringBuilder.append(String.format(" * %s", d));
-                LOGGER.info("Multiplication completed: {} {}", calcOutCome, calcStringBuilder.toString());
+                LOGGER.debug("[StringCalculator$CalculationBuilder] Multiplication completed: " + calcOutCome + " " + calcStringBuilder.toString());
             }
             return this;
         }
@@ -142,14 +110,14 @@ public class StringCalculator {
             for (double d : d1) {
                 calcOutCome = calcOutCome / d;
                 calcStringBuilder.append(String.format(" / %s", d));
-                LOGGER.info("Divide completed: {} {}", calcOutCome, calcStringBuilder.toString());
+                LOGGER.debug("[StringCalculator$CalculationBuilder] Division completed: " + calcOutCome + " " + calcStringBuilder.toString());
             }
             return this;
         }
 
         public double build() {
             calcString = calcStringBuilder.toString();
-            LOGGER.info("Finalized Builder with final outcome of: {}", calcOutCome);
+            LOGGER.debug("[StringCalculator$CalculationBuilder] Finalized Builder with final outcome of: " + calcOutCome);
             return calcOutCome;
         }
 

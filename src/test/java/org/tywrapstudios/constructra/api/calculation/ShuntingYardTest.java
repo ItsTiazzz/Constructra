@@ -1,12 +1,19 @@
 package org.tywrapstudios.constructra.api.calculation;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.tywrapstudios.constructra.Constructra;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class ShuntingYardTest {
+    @BeforeAll
+    static void setup() {
+        Constructra.reloadConfig();
+    }
+
     @Test
     public void test1() {
 
@@ -95,7 +102,7 @@ public class ShuntingYardTest {
 
     @Test
     public void test8() {
-        List<String> given = Arrays.asList("2 ^ 2 a".split(" "));
+        List<String> given = Arrays.asList("1 + 3 - 4 / 5 * ( 1 + 5 )".split(" "));
         List<String> computed = ShuntingYard.execute(given);
 
         System.out.println("infix: " + given);

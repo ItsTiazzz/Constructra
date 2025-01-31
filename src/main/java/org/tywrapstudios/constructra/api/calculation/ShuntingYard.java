@@ -4,9 +4,103 @@ import java.util.*;
 
 import static org.tywrapstudios.constructra.api.calculation.Associativity.LEFT;
 import static org.tywrapstudios.constructra.api.calculation.Associativity.RIGHT;
+import static org.tywrapstudios.constructra.Constructra.LOGGER;
 
+/**
+ * <h1>The Shunting Yard Algorithm</h1>
+ * As one may know, parsing calculations from Strings can be quite the situation.
+ * Especially considering different precedences exist per operator, and other types of rules apply too when it comes to the order of writing and evaluation.
+ * <p>The way of writing down your equation is called a notation, and different types exist!
+ * <p>The mostly used one being infix:
+ * <blockquote><pre>
+ *     1 + 3 - 4 / 5 * ( 1 + 5 )
+ * </pre></blockquote>
+ * In this notation, you work from wherever the highest preceding operator starts, which would be something like powers, {@code ^}, all the way down to the one with the lowest, which is even shared between {@code +} and {@code -}, so you have to read those from left to right too.
+ * Anything inside parentheses, {@code ()}, is on their turn done before any stuff outside of them, and inside the parentheses the same precedence rules apply all over again.
+ * <p>While this is fine for humans, and makes the most sense to us, a computer would have a harder time trying to read from it, having to re-read the equation a lot of times before it can solve it in the proper order.
+ * <p>To combat this, there are also notations that do not make use of parentheses logic, can be read 100% from left to right, while preserving your usual precedence rules, and are ideal to parse with Stack based languages.
+ * <p>One of these is called postfix, also known as the Reverse Polish Notation, and is what the Shunting Yard Algorithm focuses on.
+ * In the following Block Quote, you can see a comparison of the two, using the same equation from earlier:
+ * <blockquote><pre>
+ *     1 + 3 - 10 / 5 * ( 1 + 5 )
+ *     1 3 + 10 5 / 1 5 + * -
+ *     // Both read: -8
+ * </pre></blockquote>
+ * <h2>Postfix</h2>
+ * How does it work?
+ * For starters, you may have noticed we simply moved the operators to a different place, and the order of the numbers stayed the same.
+ * Also note that this does not say "thirteen plus one-hundred-and-five divided by...", but instead says "one three plus ten five divided by..." Be aware of spaces.
+ * <p>Another notable difference is the removal of the brackets, which we're allowed to do now because as postfix is meant to be read completely left to right, no loose ends, zero tricks.
+ * If you start reading, and you encounter an operator, you should look at the {@code 2} numbers in front of the operator and evaluate them in the same order.
+ * Reading {@code x y +} would for instance be {@code x + y}, and {@code a b ^} would be {@code a ^ b}.
+ * <p>Since a single operation can now be "rewritten" into just a single variable of the equation, which we will call "mock numbers" from now on, these {@code x y +} parts are functioning as brackets on their own.
+ * This means they can be reused as a number for the next operation:
+ * <blockquote><pre>
+ *     [1 3 +] [10 5 /] [1 5 +] * -
+ *        4      [2       6     *]-
+ *       [4             12        -]
+ *                   -8
+ * </pre></blockquote>
+ * (The Square brackets are used here to explain what turns into what, they are not part of the mathematical equation.)
+ *
+ * <h2>Conversion and Parsing</h2>
+ * Converting from infix to postfix needs a mind that can understand that the order of operations is now enforced by the order of reading, and not which operants are used.
+ * It doesn't matter if it's a {@code +} or a {@code *}, as long as you read the {@code +} before the {@code *}, addition will come first.
+ * <p>When converting from in- to postfix, try to keep this in mind:
+ * <li>Try to keep the order of the numbers themselves as consistent with the infix equation as possible.
+ * <li>If you come across an operation that is followed by an operation with a higher precedence, first handle the one with the higher precedence and then figure out where the lower precedent one fits in with it. This may cause you to break rule 1, but that's acceptable.
+ * <li>Having loose numbers in front of an operation is not bad as long as there is another operant behind the operation.
+ * <p>Lets do another example, feel free to grab a piece of paper to put notes on:
+ * <blockquote><pre>
+ *     // We start in infix
+ *     1 + 2 * (6 - 2)
+ *     // Start with the highest precedent part of the equation, in this case [(6 - 2)]
+ *     1 + 2 * 6 2 -
+ *     // We know this [6 2 -] part needs to be multiplied by [2]
+ *     // This means we have to place the * behind the mock number [6 2 -]
+ *     1 + 2 6 2 - *
+ *     // Now it gets funky, as we place the + all the way at the end of the equation
+ *     // We do this because we add [1] to the mock number [2 [6 2 -] *]
+ *     1 2 6 2 - * +
+ * </pre></blockquote>
+ * <h2>Negatives</h2>
+ * To be honest, negative values are never fun to work with, and that's why it deserves its own chapter.
+ * <p>A negative value in infix is simply the integer prefixed with a {@code -}, though in postfix this is slightly different.
+ * <p>Lets put two next to each other again:
+ * <blockquote><pre>
+ *     // We start in infix
+ *     -4 * -6 - 4 + -3
+ *     // If the infix notation can be shorter, always make it shorter
+ *     -4 * -6 - 4 - 3
+ *     // Again, start with the highest precedence, in this case [-4 * -6]
+ *     -4 -6 * - 4 - 3
+ * </pre></blockquote>
+ * <p>This isn't really good. From our knowledge, we know that operator symbols should probably be behind the numbers to properly work.
+ * Although plain numbers prefixed with a {@code -} are technically still considered integers by the JVM, during parsing and using Stacks it might cause issues due to the parser not being able to differentiate between prefixes and an operants.
+ * This means that we will have to try to fulfill the act of putting all operants behind numbers:
+ * <blockquote><pre>
+ *     // We put the "operator" - behind the numbers
+ *     4 - 6 - * - 4 - 3
+ *     // As there aren't two numbers to work with, we might as well use [0] as the left number
+ *     // While this might not be 100% correct in terms of notation, when programming using Stacks, replacing a null with a 0 is safer and will still work mathematically (0 - x == -x)
+ *     0 4 - 0 6 - * - 4 - 3
+ *     // Don't forget the rest of the notation
+ *     // [4 - 3] becomes [4 3 -]
+ *     // This mock number [4 3 -] is subtracted from the mock number [0 4 - 0 6 - *]
+ *     // ( As in: [0 4 - 0 6 - *] - [4 3 -] )
+ *     0 4 - 0 6 - * 4 3 - -
+ * </pre></blockquote>
+ * <h2>The Shunting Yard Algorithm</h2>
+ * To see how the algorithm itself works internally, feel free to look at {@link #execute(List tokens)}.
+ *
+ * @author Tiazzz
+ * @see Operator
+ * @see StringCalculator#calculate(String calculation)
+ * @see #execute(List tokens)
+ * @apiNote Due to the slight complexity of single digit operations such as {@code round} and {@code sqrt}, they are not included in the {@link Operator}{@code s} enum
+ */
 public class ShuntingYard {
-    final static Map<String, Operator> OPS = new HashMap<>();
+    private static final Map<String, Operator> OPS = new HashMap<>();
 
     static {
         // We build a map with all the existing Operators by iterating over the existing Enum
@@ -17,6 +111,17 @@ public class ShuntingYard {
         }
     }
 
+    /**
+     * Parses and returns a List from {@code infix}-notation to {@code postfix}-notation
+     * <p>You input a {@link List}{@code <}{@link String}{@code >} that contains every part of the infix notation.
+     * <blockquote><pre>
+     *     // e.g. "6 + 4 / (6 - 4)"
+     *     List<String> tokens = List.of("6", "+", "4", "/", "(", "6", "-", "4", ")");
+     * </pre></blockquote>
+     * @see StringCalculator#calculate(String) StringCalculator#calculate(String calculation) - automatically turns a String into a List, applies the Shunting Yard Algorithm and returns the outcome.
+     * @param tokens a list containing every part of an {@code infix}-notation calculation.
+     * @return a list containing every part of a {@code postfix}-notation calculation.
+     */
     public static List<String> execute(List<String> tokens) {
         List<String> output = new LinkedList<>();
         Stack<String> stack = new Stack<>();
@@ -67,5 +172,46 @@ public class ShuntingYard {
         }
 
         return output;
+    }
+
+    public static List<String> getInfix(String calculation) throws InvalidCalculationException {
+        calculation = calculation
+                .replaceAll(" ", "")    // Ensure everything is next to each other
+                .replaceAll(",", ".");  // Ensure there are no "," decimal points, as Java will only recognise "."
+
+        Stack<String> CACHE = new Stack<>();
+        List<String> tokens = new ArrayList<>();
+
+        LOGGER.debug("[ShuntingYard => Algorithm] Checking calculation: " + calculation);
+
+        for (char c : calculation.toCharArray()) {
+            String s = String.valueOf(c);
+            if (s.matches("\\d|[.]")) {
+                CACHE.push(s);
+                LOGGER.debug("[ShuntingYard => Algorithm] Pushed to cache: " + s);
+            } else if (s.matches("[-+*/%^()]")) {
+                String finalizedCachedToken = cache(CACHE, tokens);
+                LOGGER.debug("[ShuntingYard => Algorithm] finalizedCachedToken: " + finalizedCachedToken);
+                tokens.add(s);
+                LOGGER.debug("[ShuntingYard => Algorithm] Add to tokens: " + s);
+            } else {
+                CACHE.clear();
+                throw new InvalidCalculationException("Infix Calculation contained non-mathematical character: " + s);
+            }
+        }
+
+        cache(CACHE, tokens);
+
+        return tokens;
+    }
+
+    private static String cache(Stack<String> CACHE, List<String> tokens) {
+        StringBuilder cachedTokenBuilder = new StringBuilder();
+        for (int i = 0; i < CACHE.size() + i; i++) {
+            cachedTokenBuilder.append(CACHE.removeFirst());
+        }
+        String cachedToken = cachedTokenBuilder.toString();
+        if (!cachedToken.isEmpty()) tokens.add(cachedToken);
+        return cachedToken;
     }
 }
