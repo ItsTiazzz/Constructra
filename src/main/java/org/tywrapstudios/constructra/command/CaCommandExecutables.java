@@ -40,7 +40,7 @@ public class CaCommandExecutables {
     protected static int purgeNode(CommandContext<ServerCommandSource> ctx, boolean hasRange, boolean hasBlockBool) throws CommandSyntaxException {
         BlockPos pos = BlockPosArgumentType.getLoadedBlockPos(ctx,"pos");
         int range = hasRange ? IntegerArgumentType.getInteger(ctx,"range") : 1;
-        boolean destroy = hasBlockBool ? BoolArgumentType.getBool(ctx, "destroy_blocks") : false;
+        boolean destroy = hasBlockBool && BoolArgumentType.getBool(ctx, "destroy_blocks");
         ServerCommandSource source = ctx.getSource();
         int initialNodeListSize = ResourceManager.Nodes.getOrCreateState(source.getWorld()).getNodes().size();
         source.sendFeedback(() -> Text.translatable("text.constructra.command.purge_start", range).formatted(Formatting.GREEN), true);

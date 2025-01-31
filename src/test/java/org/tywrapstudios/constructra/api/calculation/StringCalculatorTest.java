@@ -7,7 +7,6 @@ import org.tywrapstudios.constructra.Constructra;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Stack;
 
 public class StringCalculatorTest {
     @BeforeAll
