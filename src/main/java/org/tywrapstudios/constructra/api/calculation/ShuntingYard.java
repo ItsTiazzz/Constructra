@@ -44,12 +44,12 @@ import static org.tywrapstudios.constructra.Constructra.LOGGER;
  * (The Square brackets are used here to explain what turns into what, they are not part of the mathematical equation.)
  *
  * <h2>Conversion and Parsing</h2>
- * Converting from infix to postfix needs a mind that can understand that the order of operations is now enforced by the order of reading, and not which operants are used.
+ * Converting from infix to postfix needs a mind that can understand that the order of operations is now enforced by the order of reading, and not which operators are used.
  * It doesn't matter if it's a {@code +} or a {@code *}, as long as you read the {@code +} before the {@code *}, addition will come first.
  * <p>When converting from in- to postfix, try to keep this in mind:
  * <li>Try to keep the order of the numbers themselves as consistent with the infix equation as possible.
  * <li>If you come across an operation that is followed by an operation with a higher precedence, first handle the one with the higher precedence and then figure out where the lower precedent one fits in with it. This may cause you to break rule 1, but that's acceptable.
- * <li>Having loose numbers in front of an operation is not bad as long as there is another operant behind the operation.
+ * <li>Having loose numbers in front of an operation is not bad as long as there is another operator behind the operation.
  * <p>Lets do another example, feel free to grab a piece of paper to put notes on:
  * <blockquote><pre>
  *     // We start in infix
@@ -76,8 +76,8 @@ import static org.tywrapstudios.constructra.Constructra.LOGGER;
  *     -4 -6 * - 4 - 3
  * </pre></blockquote>
  * <p>This isn't really good. From our knowledge, we know that operator symbols should probably be behind the numbers to properly work.
- * Although plain numbers prefixed with a {@code -} are technically still considered integers by the JVM, during parsing and using Stacks it might cause issues due to the parser not being able to differentiate between prefixes and an operants.
- * This means that we will have to try to fulfill the act of putting all operants behind numbers:
+ * Although plain numbers prefixed with a {@code -} are technically still considered integers by the JVM, during parsing and using Stacks it might cause issues due to the parser not being able to differentiate between prefixes and an operators.
+ * This means that we will have to try to fulfill the act of putting all operators behind numbers:
  * <blockquote><pre>
  *     // We put the "operator" - behind the numbers
  *     4 - 6 - * - 4 - 3
@@ -127,9 +127,25 @@ public class ShuntingYard {
         Stack<String> stack = new Stack<>();
 
         // For all the input tokens read the next token
-        for (String token : tokens) {
+        for (int i = 0; i < tokens.size(); i++) {
+            String token = tokens.get(i);
+
+            // We check if the token is a subtraction token and if it holds either of the following values:
+            // It's the first of the tokens
+            // There's another operator in front of it
+            // The token in front of it is an open parenthesis
+            if (token.equals(Operator.SUBTRACTION.symbol) && (i == 0 || OPS.containsKey(tokens.get(i-1)) || tokens.get(i-1).equals("("))) {
+                // This is a negative number indicator
+                output.add("0");                // Add 0 as left operand
+                output.add(tokens.get(i+1));    // Add the number
+                output.add("-");                // Add the minus operator
+                i++;                            // Skip the next token since we already processed it
+                continue;
+            }
+
             if (OPS.containsKey(token)) {
                 // Token is an operator
+
                 while (!stack.isEmpty() && OPS.containsKey(stack.peek())) {
                     // While there is an operator (y) at the top of the operators stack and
                     // either (x) is left-associative and its precedence is less or equal to
@@ -174,6 +190,13 @@ public class ShuntingYard {
         return output;
     }
 
+    /**
+     * Parses an infix calculation into separate equation parts (tokens).
+     * @see #execute(List tokens)
+     * @param calculation the calculation to perform this parse on
+     * @return all the tokens for an infix calculation
+     * @throws InvalidCalculationException if your calculation contains characters that aren't allowed in this implementation
+     */
     public static List<String> getInfix(String calculation) throws InvalidCalculationException {
         calculation = calculation
                 .replaceAll(" ", "")    // Ensure everything is next to each other
@@ -182,7 +205,7 @@ public class ShuntingYard {
         Stack<String> CACHE = new Stack<>();
         List<String> tokens = new ArrayList<>();
 
-        LOGGER.debug("[ShuntingYard => Algorithm] Checking calculation: " + calculation);
+        LOGGER.debug("[ShuntingYard => Prerequisites] Checking calculation: " + calculation);
 
         for (char c : calculation.toCharArray()) {
             String s = String.valueOf(c);
@@ -191,9 +214,9 @@ public class ShuntingYard {
                 LOGGER.debug("[ShuntingYard => Algorithm] Pushed to cache: " + s);
             } else if (s.matches("[-+*/%^()]")) {
                 String finalizedCachedToken = cache(CACHE, tokens);
-                LOGGER.debug("[ShuntingYard => Algorithm] finalizedCachedToken: " + finalizedCachedToken);
+                LOGGER.debug("[ShuntingYard => Prerequisites] finalizedCachedToken: " + finalizedCachedToken);
                 tokens.add(s);
-                LOGGER.debug("[ShuntingYard => Algorithm] Add to tokens: " + s);
+                LOGGER.debug("[ShuntingYard => Prerequisites] Add to tokens: " + s);
             } else {
                 CACHE.clear();
                 throw new InvalidCalculationException("Infix Calculation contained non-mathematical character: " + s);

@@ -109,4 +109,17 @@ public class ShuntingYardTest {
         System.out.println("postfix (expected): " + "No Expectation");
         System.out.println("postfix (computed): " + computed);
     }
+
+    @Test
+    public void test9() {
+        List<String> given = Arrays.asList("- 6 + 7 * ( - 6 + 12 )".split(" "));
+        List<String> expected = List.of("0", "6", "-", "7", "0", "6", "-", "12", "+", "*", "+");
+        List<String> computed = ShuntingYard.execute(given);
+
+        System.out.println("infix: " + given);
+        System.out.println("postfix (expected): " + expected);
+        System.out.println("postfix (computed): " + computed);
+
+        Assertions.assertEquals(expected, computed);
+    }
 }

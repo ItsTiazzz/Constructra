@@ -34,7 +34,6 @@ public class StringCalculatorTest {
 
     @Test
     public void test4() {
-        System.out.println("---------PF Calc---------");
         List<String> computed = ShuntingYard.execute(calc("(5 + 2) ^ 3"));
         System.out.println("postfix (computed): " + computed);
         StringCalculator.CalculationBuilder builder = new StringCalculator.CalculationBuilder();
@@ -42,7 +41,18 @@ public class StringCalculatorTest {
         double e = (5 + 2) * (5 + 2) * (5 + 2);
         System.out.println("expected: " + e);
         System.out.println("result: " + d);
-        System.out.println("---------PF Calc---------");
+        Assertions.assertEquals(e, d);
+    }
+
+    @Test
+    public void test5() {
+        List<String> computed = ShuntingYard.execute(calc("-6 + 7 * (-6 + 12)"));
+        System.out.println("postfix (computed): " + computed);
+        StringCalculator.CalculationBuilder builder = new StringCalculator.CalculationBuilder();
+        double d = builder.fromPostfix(computed).build();
+        double e = -6 + 7 * (-6 + 12);
+        System.out.println("expected: " + e);
+        System.out.println("result: " + d);
         Assertions.assertEquals(e, d);
     }
 
@@ -50,7 +60,7 @@ public class StringCalculatorTest {
         try {
             return ShuntingYard.getInfix(calc);
         } catch (Exception e){
-            System.out.println(e.getMessage());
+            System.out.println("Caught: " + e.getMessage());
             return new ArrayList<>();
         }
     }
