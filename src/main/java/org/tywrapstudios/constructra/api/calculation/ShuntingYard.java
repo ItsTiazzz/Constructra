@@ -44,12 +44,12 @@ import static org.tywrapstudios.constructra.Constructra.LOGGER;
  * (The Square brackets are used here to explain what turns into what, they are not part of the mathematical equation.)
  *
  * <h2>Conversion and Parsing</h2>
- * Converting from infix to postfix needs a mind that can understand that the order of operations is now enforced by the order of reading, and not which operators are used.
+ * Converting from infix to postfix needs something that can understand that the order of operations is now enforced by the order of reading, and not which operators are used.
  * It doesn't matter if it's a {@code +} or a {@code *}, as long as you read the {@code +} before the {@code *}, addition will come first.
  * <p>When converting from in- to postfix, try to keep this in mind:
  * <li>Try to keep the order of the numbers themselves as consistent with the infix equation as possible.
  * <li>If you come across an operation that is followed by an operation with a higher precedence, first handle the one with the higher precedence and then figure out where the lower precedent one fits in with it. This may cause you to break rule 1, but that's acceptable.
- * <li>Having loose numbers in front of an operation is not bad as long as there is another operator behind the operation.
+ * <li>Having loose numbers in front of an operation is not bad as long as there is another operator behind the operation.</li>
  * <p>Lets do another example, feel free to grab a piece of paper to put notes on:
  * <blockquote><pre>
  *     // We start in infix
@@ -64,7 +64,7 @@ import static org.tywrapstudios.constructra.Constructra.LOGGER;
  *     1 2 6 2 - * +
  * </pre></blockquote>
  * <h2>Negatives</h2>
- * To be honest, negative values are never fun to work with, and that's why it deserves its own chapter.
+ * Negative values are never fun to work with, and that's why it deserves its own chapter.
  * <p>A negative value in infix is simply the integer prefixed with a {@code -}, though in postfix this is slightly different.
  * <p>Lets put two next to each other again:
  * <blockquote><pre>
@@ -76,13 +76,18 @@ import static org.tywrapstudios.constructra.Constructra.LOGGER;
  *     -4 -6 * - 4 - 3
  * </pre></blockquote>
  * <p>This isn't really good. From our knowledge, we know that operator symbols should probably be behind the numbers to properly work.
- * Although plain numbers prefixed with a {@code -} are technically still considered integers by the JVM, during parsing and using Stacks it might cause issues due to the parser not being able to differentiate between prefixes and an operators.
- * This means that we will have to try to fulfill the act of putting all operators behind numbers:
+ * Although plain numbers prefixed with a {@code -} are technically still considered integers by the JVM, during parsing and using Stacks it might cause issues due to the parser not being able to differentiate between prefixes and operators.
+ * This means that we will have to try to fulfil the act of putting all operators behind the numbers they operate on:
  * <blockquote><pre>
  *     // We put the "operator" - behind the numbers
  *     4 - 6 - * - 4 - 3
- *     // As there aren't two numbers to work with, we might as well use [0] as the left number
- *     // While this might not be 100% correct in terms of notation, when programming using Stacks, replacing a null with a 0 is safer and will still work mathematically (0 - x == -x)
+ * </pre></blockquote>
+ * An operator needs two numbers to work with though, to fix this, we might as well use {@code 0} as the left number.
+ * While this might not be 100% correct in terms of notation, when programming using Stacks, replacing a {@code null} or just an empty slot with a {@code 0} is safer and will still work mathematically {@code (0 - x == -x)}.
+ * <p>We know a {@code -} symbol is indicating a negative integer if:
+ * <li>It's the first symbol in the list of tokens;
+ * <li>It has another operator, or an open parenthesis in front of it.</li>
+ * <blockquote><pre>
  *     0 4 - 0 6 - * - 4 - 3
  *     // Don't forget the rest of the notation
  *     // [4 - 3] becomes [4 3 -]
@@ -91,13 +96,12 @@ import static org.tywrapstudios.constructra.Constructra.LOGGER;
  *     0 4 - 0 6 - * 4 3 - -
  * </pre></blockquote>
  * <h2>The Shunting Yard Algorithm</h2>
- * To see how the algorithm itself works internally, feel free to look at {@link #execute(List tokens)}.
- *
+ * To see how the algorithm itself works internally, feel free to look at {@link #execute(List)}.
+ * If you need an in depth explanation, you can see a good page from Brilliant about it, <a href="https://brilliant.org/wiki/shunting-yard-algorithm/">here</a>
  * @author Tiazzz
  * @see Operator
  * @see StringCalculator#calculate(String calculation)
  * @see #execute(List tokens)
- * @apiNote Due to the slight complexity of single digit operations such as {@code round} and {@code sqrt}, they are not included in the {@link Operator}{@code s} enum
  */
 public class ShuntingYard {
     private static final Map<String, Operator> OPS = new HashMap<>();
@@ -118,7 +122,7 @@ public class ShuntingYard {
      *     // e.g. "6 + 4 / (6 - 4)"
      *     List<String> tokens = List.of("6", "+", "4", "/", "(", "6", "-", "4", ")");
      * </pre></blockquote>
-     * @see StringCalculator#calculate(String) StringCalculator#calculate(String calculation) - automatically turns a String into a List, applies the Shunting Yard Algorithm and returns the outcome.
+     * @see StringCalculator#calculate(String) StringCalculator#calculate(String) - automatically turns a String into a List, applies the Shunting Yard Algorithm and returns the outcome.
      * @param tokens a list containing every part of an {@code infix}-notation calculation.
      * @return a list containing every part of a {@code postfix}-notation calculation.
      */
@@ -129,22 +133,27 @@ public class ShuntingYard {
         // For all the input tokens read the next token
         for (int i = 0; i < tokens.size(); i++) {
             String token = tokens.get(i);
-
-            // We check if the token is a subtraction token and if it holds either of the following values:
-            // It's the first of the tokens
-            // There's another operator in front of it
-            // The token in front of it is an open parenthesis
-            if (token.equals(Operator.SUBTRACTION.symbol) && (i == 0 || OPS.containsKey(tokens.get(i-1)) || tokens.get(i-1).equals("("))) {
-                // This is a negative number indicator
-                output.add("0");                // Add 0 as left operand
-                output.add(tokens.get(i+1));    // Add the number
-                output.add("-");                // Add the minus operator
-                i++;                            // Skip the next token since we already processed it
-                continue;
-            }
-
             if (OPS.containsKey(token)) {
                 // Token is an operator
+                Operator currentOp = OPS.get(token);
+
+                // We check if the token is a subtraction token and if it holds either of the following values:
+                // It's the first of the tokens
+                // There's another operator/open parenthesis in front of it
+                if (token.equals(Operator.SUBTRACTION.symbol) && (i == 0 || OPS.containsKey(tokens.get(i-1)) || tokens.get(i-1).equals("("))) {
+                    // This is a negative number indicator
+                    output.add("0");                // Add 0 as left operand
+                    output.add(tokens.get(i+1));    // Add the number
+                    output.add("-");                // Add the minus operator
+                    i++;                            // Skip the next token since we already processed it
+                    continue;
+                }
+
+                if (currentOp.singleOperand) {
+                    // Single operand operators can be pushed directly since they only need one number
+                    stack.push(token);
+                    continue;
+                }
 
                 while (!stack.isEmpty() && OPS.containsKey(stack.peek())) {
                     // While there is an operator (y) at the top of the operators stack and
@@ -192,7 +201,7 @@ public class ShuntingYard {
 
     /**
      * Parses an infix calculation into separate equation parts (tokens).
-     * @see #execute(List tokens)
+     * @see #execute(List)
      * @param calculation the calculation to perform this parse on
      * @return all the tokens for an infix calculation
      * @throws InvalidCalculationException if your calculation contains characters that aren't allowed in this implementation
@@ -207,34 +216,59 @@ public class ShuntingYard {
 
         LOGGER.debug("[ShuntingYard => Prerequisites] Checking calculation: " + calculation);
 
-        for (char c : calculation.toCharArray()) {
+        List<Character> chars = new ArrayList<>();
+        for (char c : calculation.toCharArray()) chars.add(c);
+
+        for (int i = 0; i < chars.size(); i++) {
+            char c = chars.get(i);
             String s = String.valueOf(c);
             if (s.matches("\\d|[.]")) {
                 CACHE.push(s);
-                LOGGER.debug("[ShuntingYard => Algorithm] Pushed to cache: " + s);
+                LOGGER.debug("[ShuntingYard => Prerequisites] Pushed to cache: " + s);
             } else if (s.matches("[-+*/%^()]")) {
-                String finalizedCachedToken = cache(CACHE, tokens);
+                String finalizedCachedToken = cache(CACHE, tokens, "Found operator, time to add the cache before it.");
                 LOGGER.debug("[ShuntingYard => Prerequisites] finalizedCachedToken: " + finalizedCachedToken);
                 tokens.add(s);
                 LOGGER.debug("[ShuntingYard => Prerequisites] Add to tokens: " + s);
+            } else if (s.matches("s")) {
+                tokens.add("sqrt");
+                LOGGER.debug("[ShuntingYard => Prerequisites] Add to tokens: sqrt");
+                i = i + 3;
+            } else if (s.matches("c")) {
+                tokens.add("ceil");
+                LOGGER.debug("[ShuntingYard => Prerequisites] Add to tokens: ceil");
+                i = i + 3;
+            } else if (s.matches("f")) {
+                tokens.add("floor");
+                LOGGER.debug("[ShuntingYard => Prerequisites] Add to tokens: floor");
+                i = i + 4;
+            } else if (s.matches("r")) {
+                tokens.add("round");
+                LOGGER.debug("[ShuntingYard => Prerequisites] Add to tokens: round");
+                i = i + 4;
             } else {
                 CACHE.clear();
                 throw new InvalidCalculationException("Infix Calculation contained non-mathematical character: " + s);
             }
         }
 
-        cache(CACHE, tokens);
+        cache(CACHE, tokens, "The cache might still have a number as the last Operand, we need to add it.");
+        LOGGER.debug("Final infix List: " + tokens);
 
         return tokens;
     }
 
-    private static String cache(Stack<String> CACHE, List<String> tokens) {
+    private static String cache(Stack<String> CACHE, List<String> tokens, String reason) {
         StringBuilder cachedTokenBuilder = new StringBuilder();
+        LOGGER.debug("De-caching: " + reason);
         for (int i = 0; i < CACHE.size() + i; i++) {
             cachedTokenBuilder.append(CACHE.removeFirst());
+            LOGGER.debug("De-cached: " + cachedTokenBuilder);
         }
         String cachedToken = cachedTokenBuilder.toString();
+        LOGGER.debug("Final Token: " + cachedToken);
         if (!cachedToken.isEmpty()) tokens.add(cachedToken);
+        else LOGGER.debugWarning("Empty, skipping.");
         return cachedToken;
     }
 }

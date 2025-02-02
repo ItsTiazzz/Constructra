@@ -122,4 +122,14 @@ public class ShuntingYardTest {
 
         Assertions.assertEquals(expected, computed);
     }
+
+    @Test
+    public void test10() {
+        List<String> given = Arrays.asList("1 + 3 - 10 / 5 * ( 1 + 5 )".split(" "));
+        List<String> computed = ShuntingYard.execute(given);
+
+        System.out.println("infix: " + given);
+        System.out.println("postfix (expected): Nothing");
+        System.out.println("postfix (computed): " + computed);
+    }
 }

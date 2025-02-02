@@ -6,6 +6,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.util.Identifier;
 import net.tywrapstudios.blossombridge.api.config.ConfigManager;
 import net.tywrapstudios.blossombridge.api.logging.LoggingHandler;
+import org.jetbrains.annotations.Nullable;
 import org.tywrapstudios.constructra.api.resource.v1.ResourceManager;
 import org.tywrapstudios.constructra.config.ConstructraConfig;
 import org.tywrapstudios.constructra.registry.CaRegistries;
@@ -14,6 +15,7 @@ import org.tywrapstudios.constructra.util.Util;
 
 import java.io.File;
 import java.util.Objects;
+import java.util.function.Consumer;
 
 public class Constructra implements ModInitializer {
 	public static final String MOD_ID = "constructra";
@@ -45,6 +47,12 @@ public class Constructra implements ModInitializer {
 	}
 
 	public static void reloadConfig() {
+		reloadConfig(null);
+	}
+
+	public static void reloadConfig(@Nullable Consumer<ConstructraConfig> runBeforeSaving) {
 		CONFIG_MANAGER.loadConfig();
+		if (runBeforeSaving != null) runBeforeSaving.accept(CONFIG_MANAGER.getConfig());
+		CONFIG_MANAGER.saveConfig();
 	}
 }

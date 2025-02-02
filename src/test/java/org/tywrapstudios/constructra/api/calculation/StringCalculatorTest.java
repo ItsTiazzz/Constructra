@@ -8,6 +8,8 @@ import org.tywrapstudios.constructra.Constructra;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.Math.*;
+
 public class StringCalculatorTest {
     @BeforeAll
     static void setup() {
@@ -51,6 +53,49 @@ public class StringCalculatorTest {
         StringCalculator.CalculationBuilder builder = new StringCalculator.CalculationBuilder();
         double d = builder.fromPostfix(computed).build();
         double e = -6 + 7 * (-6 + 12);
+        System.out.println("expected: " + e);
+        System.out.println("result: " + d);
+        Assertions.assertEquals(e, d);
+    }
+
+    @Test
+    public void test6() {
+        System.out.println("Calc test6");
+        List<String> computed = ShuntingYard.execute(calc("-6 * sqrt(9)"));
+        System.out.println("postfix (computed): " + computed);
+        StringCalculator.CalculationBuilder builder = new StringCalculator.CalculationBuilder();
+        double d = builder.fromPostfix(computed).build();
+        double e = -6 * sqrt(9);
+        System.out.println("expected: " + e);
+        System.out.println("result: " + d);
+        Assertions.assertEquals(e, d);
+    }
+
+    @Test
+    public void test7() {
+        System.out.println("Calc test7");
+        double d = StringCalculator.calculate("-6 * sqrt(9)");
+        double e = -6 * sqrt(9);
+        System.out.println("expected: " + e);
+        System.out.println("result: " + d);
+        Assertions.assertEquals(e, d);
+    }
+
+    @Test
+    public void test8() {
+        System.out.println("Calc test8");
+        double d = StringCalculator.calculate("-6 * sqrt(9) - 8");
+        double e = -6 * sqrt(9) - 8;
+        System.out.println("expected: " + e);
+        System.out.println("result: " + d);
+        Assertions.assertEquals(e, d);
+    }
+
+    @Test
+    public void test9() {
+        System.out.println("Calc test9");
+        double d = StringCalculator.calculate("-6 * round(-9.87 - 8)");
+        double e = -6 * round(-9.87 - 8);
         System.out.println("expected: " + e);
         System.out.println("result: " + d);
         Assertions.assertEquals(e, d);
